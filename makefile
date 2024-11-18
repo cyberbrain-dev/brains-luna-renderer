@@ -1,5 +1,5 @@
 build:
-	g++ -std=c++17 src/*.cpp -o bin/luna -Wall -lSDL2
+	gcc -std=c99 src/*.c -o bin/luna -Wall -lSDL2
 
 run:
 	./bin/luna
