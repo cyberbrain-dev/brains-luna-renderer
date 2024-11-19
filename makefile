@@ -1,5 +1,5 @@
 build:
-	gcc -std=c99 src/*.c -o bin/luna -Wall -lSDL2
+	gcc -std=c99 src/*.c -lSDL2 -Wall -o bin/luna 
 
 run:
 	./bin/luna
