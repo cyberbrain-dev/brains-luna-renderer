@@ -1,20 +1,25 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include <SDL2/SDL.h>
 
-
-/// @brief SDL window instance
+// SDL window instance
 SDL_Window* window = NULL;
-/// @brief SDL renderer instance
+// SDL renderer instance
 SDL_Renderer* renderer = NULL;
 
-/// @brief Indicates whether the gameloop is running or not
+// An array, representing color buffer - a collection of pixel colors, that should be rendered
+uint32_t* color_buffer = NULL;
+
+const int window_width = 800;
+const int window_height = 600;
+
+// Indicates whether the gameloop is running or not
 bool is_running = false;
 
 
-/// @brief Creates a simple Luna window
-/// @return `true` - if the creation is successful, otherwise - `false`
+// Creates a simple Luna window
 bool initialize_window(void)
 {
     // initializing SDL subsystems...
@@ -30,8 +35,8 @@ bool initialize_window(void)
         NULL,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        800,
-        600,
+        window_width,
+        window_height,
         SDL_WINDOW_BORDERLESS
     );
 
@@ -55,12 +60,13 @@ bool initialize_window(void)
     return true;
 }
 
-/// @brief Sets up a program before the render loop
+// Sets up a program before the render loop
 void setup(void)
 {
-
+    // allocating memory in color buffer for each pixel of the window
+    color_buffer = (uint32_t*) malloc(sizeof(uint32_t) * window_width * window_height);
 }
-/// @brief Checking any input the user does 
+// Checking any input the user does 
 void process_input(void)
 {
     // Creating and polling the current moment event
@@ -81,12 +87,12 @@ void process_input(void)
     }
 
 }
-/// @brief Updates the states of the different objects in program 
+// Updates the states of the different objects in program 
 void update(void)
 {
 
 }
-/// @brief Renders the frame 
+// Renders the frame 
 void render(void)
 {
     // Setting a base color for "empty frame"...
@@ -97,6 +103,17 @@ void render(void)
 
     // Updating the screen
     SDL_RenderPresent(renderer);
+}
+
+// Releases all the resources the window has been using
+void destroy_window(void)
+{
+    free(color_buffer);
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
+    SDL_Quit();
 }
 
 
@@ -114,6 +131,8 @@ int main()
         update();
         render();
     }
+
+    destroy_window();
 
 
     return 0;
