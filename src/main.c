@@ -47,6 +47,48 @@ void fill_color_buffer(uint32_t color)
         }
     }
 }
+/// Draws a dotted grid with cell sizes provided
+void draw_solid_grid(int cell_width, int cell_height, uint32_t color)
+{
+    for (int y = 0; y < window_height; y++)
+    {
+        for (int x = 0; x < window_width; x++)
+        {
+            if (y % cell_height == 0)
+            {
+                color_buffer[y * window_width + x] = color;
+                continue;
+            }
+
+            if (x % cell_width == 0)
+            {
+                color_buffer[y * window_width + x] = color;
+            }
+        }
+    }
+}
+/// Draws a dotted grid with cell sizes provided
+void draw_dotted_grid(int cell_width, int cell_height, uint32_t color)
+{
+    for (int y = 0; y < window_height; y += cell_height)
+    {
+        for (int x = 0; x < window_width; x += cell_width)
+        {
+            color_buffer[y * window_width + x] = color;
+        }
+    }
+}
+// Draws a rectangle
+void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color)
+{
+    for (int y = y_pos; y < y_pos + height; y++)
+    {
+        for (int x = x_pos; x < x_pos + width; x++)
+        {
+            color_buffer[y * window_width + x] = color;
+        }
+    }
+}
 
 // Creates a simple Luna window
 bool initialize_window(void)
@@ -146,11 +188,14 @@ void render(void)
     // ... and clearing the rendering target before another render
     SDL_RenderClear(renderer);
 
+    fill_color_buffer(0xFF000000);
+    draw_dotted_grid(20, 20, 0xFFFFFFFF);
+    draw_rect(100, 123, 60, 43, 0xFF00FFFF);
+
     // preparing the color buffer to render
     // * after that the color buffer can be modified without impact on rendering target
     translate_color_buffer();
 
-    fill_color_buffer(0xFFFFFF00);
 
     // Updating the screen
     SDL_RenderPresent(renderer);
