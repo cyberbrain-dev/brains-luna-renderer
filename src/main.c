@@ -11,6 +11,8 @@ SDL_Renderer* renderer = NULL;
 
 // An array, representing color buffer - a collection of pixel colors, that should be rendered
 uint32_t* color_buffer = NULL;
+// A texture that the color buffer is translated to and which is able to be rendered by SDL
+SDL_Texture* color_buffer_texture = NULL;
 
 const int window_width = 800;
 const int window_height = 600;
@@ -18,6 +20,33 @@ const int window_height = 600;
 // Indicates whether the gameloop is running or not
 bool is_running = false;
 
+
+// Updates the SDL texture with our color buffer and copies the texture to the rendering rarget
+void translate_color_buffer(void)
+{
+    SDL_UpdateTexture(
+        color_buffer_texture,
+        NULL,
+        color_buffer,
+        (int) (window_width * sizeof(uint32_t))
+    );
+
+    SDL_RenderCopy(renderer, color_buffer_texture, NULL, NULL);
+}
+
+// Fills the color buffer with the color passed
+void fill_color_buffer(uint32_t color)
+{
+    // looping through all the pixels...
+    for (int y = 0; y < window_height; y++)
+    {
+        for (int x = 0; x < window_width; x++)
+        {
+            // ...and setting the color
+            color_buffer[y * window_width + x] = color;
+        }
+    }
+}
 
 // Creates a simple Luna window
 bool initialize_window(void)
@@ -65,6 +94,15 @@ void setup(void)
 {
     // allocating memory in color buffer for each pixel of the window
     color_buffer = (uint32_t*) malloc(sizeof(uint32_t) * window_width * window_height);
+
+    // creating SDL texture
+    color_buffer_texture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING,
+        window_width,
+        window_height
+    );
 }
 // Checking any input the user does 
 void process_input(void)
@@ -97,9 +135,14 @@ void render(void)
 {
     // Setting a base color for "empty frame"...
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
-    // ... and clearing the frame before another render
+    // ... and clearing the rendering target before another render
     SDL_RenderClear(renderer);
 
+    // preparing the color buffer to render
+    // * after that the color buffer can be modified without impact on rendering target
+    translate_color_buffer();
+
+    fill_color_buffer(0xFFFFFF00);
 
     // Updating the screen
     SDL_RenderPresent(renderer);
