@@ -56,6 +56,10 @@ bool initialize_window(void)
     }
 
 
+    // setting the window fullscreen
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+
+
     return true;
 }
 void destroy_window(void)
