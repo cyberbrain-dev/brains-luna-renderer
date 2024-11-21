@@ -14,8 +14,8 @@ uint32_t* color_buffer = NULL;
 // A texture that the color buffer is translated to and which is able to be rendered by SDL
 SDL_Texture* color_buffer_texture = NULL;
 
-const int window_width = 800;
-const int window_height = 600;
+int window_width = 800;
+int window_height = 600;
 
 // Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -58,6 +58,14 @@ bool initialize_window(void)
         return false;
     }
 
+    // using the SDL to query the resolution of my monitor...
+    SDL_DisplayMode display_mode;
+    SDL_GetCurrentDisplayMode(0, &display_mode);
+
+    // ...and setting the resolution 
+    window_width = display_mode.w;
+    window_height = display_mode.h;
+
 
     // initializing a SDL window
     window = SDL_CreateWindow(
@@ -66,7 +74,7 @@ bool initialize_window(void)
         SDL_WINDOWPOS_CENTERED,
         window_width,
         window_height,
-        SDL_WINDOW_BORDERLESS
+        SDL_WINDOW_BORDERLESS | SDL_WINDOW_FULLSCREEN
     );
 
     if (!window)
