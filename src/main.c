@@ -9,6 +9,7 @@
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
 
+
 /// @brief Sets up a program before the render loop
 void setup(void)
 {
