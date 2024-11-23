@@ -8,6 +8,11 @@
 /// @brief Fills the color buffer with the color passed
 /// @param color the window will be filled by this color
 void fill_color_buffer(uint32_t color);
+/// @brief Sets a single pixel with the color provided
+/// @param x x of the pixel
+/// @param y y of the pixel
+/// @param color a color for the pixel to be set
+void draw_pixel(int x, int y, uint32_t color);
 /// @brief Draws a solid grid
 /// @param cell_width cell's width
 /// @param cell_height cell's height

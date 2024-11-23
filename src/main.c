@@ -1,11 +1,23 @@
+#define VECTOR_TEST // For the cube
+#define NUMBER_OF_POINTS 9 * 9 * 9
+
 #include <stdbool.h>
 
 #include "display.h"
 #include "draw.h"
+#include "lunacolors.h"
+#include "vector.h"
 
+
+#ifdef VECTOR_TEST
+
+vect3_t cube_points[NUMBER_OF_POINTS]; // A test 9x9x9 cube
+
+#endif /* VECTOR_TEST */ 
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
+
 
 /// @brief Sets up a program before the render loop
 void setup(void)
@@ -21,7 +33,32 @@ void setup(void)
         window_width,
         window_height
     );
+
+    #ifdef VECTOR_TEST
+
+    // start loading my array of cube vectors
+    // from -1 to 1 (in this 9x9x9 cube)
+    int cube_array_counter = 0;
+
+    for (float x = -1; x <= 1; x += 0.25f)
+    {
+        for (float y = -1; y <= 1; y += 0.25f)
+        {
+            for (float z = -1; z <= 1; z += 0.25f)
+            {
+                // creating a new vector and putting it in the cube array
+                vect3_t new_point = { x, y, z };
+                cube_points[cube_array_counter] = new_point;
+
+                // moving to the next point in the cube
+                cube_array_counter++;
+            }
+        }
+    }
+
+    #endif /* VECTOR_TEST */
 }
+
 /// @brief Checking any input the user does 
 void process_input(void)
 {
@@ -43,11 +80,13 @@ void process_input(void)
     }
 
 }
+
 /// @brief Updates the states of the different objects in program 
 void update(void)
 {
 
 }
+
 /// @brief Renders the frame 
 void render(void)
 {
@@ -56,9 +95,8 @@ void render(void)
     // ... and clearing the rendering target before another render
     SDL_RenderClear(renderer);
 
-    fill_color_buffer(0xFF000000);
-    draw_dotted_grid(20, 20, 0xFFFFFFFF);
-    draw_rect(100, 123, 60, 43, 0xFF00FFFF);
+    fill_color_buffer(LUNA_COLOR_BLACK);
+    draw_pixel(45, 206, LUNA_COLOR_RED);
 
     // preparing the color buffer to render
     // * after that the color buffer can be modified without impact on rendering target

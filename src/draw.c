@@ -13,6 +13,15 @@ void fill_color_buffer(uint32_t color)
         }
     }
 }
+
+void draw_pixel(int x, int y, uint32_t color)
+{
+    if (x < window_width && y < window_height)
+    {
+        color_buffer[y * window_width + x] = color;
+    }
+}
+
 void draw_solid_grid(int cell_width, int cell_height, uint32_t color)
 {
     for (int y = 0; y < window_height; y++)
@@ -32,6 +41,7 @@ void draw_solid_grid(int cell_width, int cell_height, uint32_t color)
         }
     }
 }
+
 void draw_dotted_grid(int cell_width, int cell_height, uint32_t color)
 {
     for (int y = 0; y < window_height; y += cell_height)
@@ -42,6 +52,7 @@ void draw_dotted_grid(int cell_width, int cell_height, uint32_t color)
         }
     }
 }
+
 void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color)
 {
     for (int y = y_pos; y < y_pos + height; y++)
