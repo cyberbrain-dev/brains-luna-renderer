@@ -12,4 +12,6 @@
 #define LUNA_COLOR_PURPLE       0xFFFF00FF
 #define LUNA_COLOR_CYAN         0xFF00FFFF
 
+#define LUNA_COLOR_GREY         0xFF555555
+
 #endif
