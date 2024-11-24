@@ -11,7 +11,10 @@
 vect3_t cube_points[NUMBER_OF_POINTS]; // A test 9x9x9 cube
 vect2_t projected_cube_points[NUMBER_OF_POINTS]; // projected points for the cube
 
-float fov_factor = 120;
+// position of the camera
+vect3_t camera_position = { 0, 0, -5 };
+
+float fov_factor = 640;
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -82,8 +85,8 @@ void process_input(void)
 vect2_t project(vect3_t point)
 {
     vect2_t projected_point = {
-        .x = (fov_factor * point.x),
-        .y = (fov_factor * point.y)
+        .x = (fov_factor * point.x) / point.z,
+        .y = (fov_factor * point.y) / point.z
     };
 
     return projected_point;
@@ -96,6 +99,9 @@ void update(void)
     for (int i = 0; i < NUMBER_OF_POINTS; i++)
     {
         vect3_t point = cube_points[i];
+
+        // shifting the cube a little bit farther
+        point.z -= camera_position.z;
 
         vect2_t projected_point = project(point);
 
