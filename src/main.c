@@ -1,4 +1,3 @@
-#define VECTOR_TEST // For the cube
 #define NUMBER_OF_POINTS 9 * 9 * 9
 
 #include <stdbool.h>
@@ -9,11 +8,13 @@
 #include "vector.h"
 
 
-#ifdef VECTOR_TEST
-
 vect3_t cube_points[NUMBER_OF_POINTS]; // A test 9x9x9 cube
+vect2_t projected_cube_points[NUMBER_OF_POINTS]; // projected points for the cube
 
-#endif /* VECTOR_TEST */ 
+// position of the camera
+vect3_t camera_position = { 0, 0, -5 };
+
+float fov_factor = 640;
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -34,7 +35,6 @@ void setup(void)
         window_height
     );
 
-    #ifdef VECTOR_TEST
 
     // start loading my array of cube vectors
     // from -1 to 1 (in this 9x9x9 cube)
@@ -55,8 +55,6 @@ void setup(void)
             }
         }
     }
-
-    #endif /* VECTOR_TEST */
 }
 
 /// @brief Checking any input the user does 
@@ -81,29 +79,64 @@ void process_input(void)
 
 }
 
+/// @brief Projects a 3D point in 2D
+/// @param point 3D point
+/// @returns A projected 2D-point 
+vect2_t project(vect3_t point)
+{
+    vect2_t projected_point = {
+        .x = (fov_factor * point.x) / point.z,
+        .y = (fov_factor * point.y) / point.z
+    };
+
+    return projected_point;
+}
+
 /// @brief Updates the states of the different objects in program 
 void update(void)
 {
+    // projecting all the points of the cube
+    for (int i = 0; i < NUMBER_OF_POINTS; i++)
+    {
+        vect3_t point = cube_points[i];
 
+        // shifting the cube a little bit farther
+        point.z -= camera_position.z;
+
+        vect2_t projected_point = project(point);
+
+        projected_cube_points[i] = projected_point;
+    }
 }
 
 /// @brief Renders the frame 
 void render(void)
 {
-    // Setting a base color for "empty frame"...
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
-    // ... and clearing the rendering target before another render
-    SDL_RenderClear(renderer);
+    draw_dotted_grid(10, 10, LUNA_COLOR_GREY);
 
-    fill_color_buffer(LUNA_COLOR_BLACK);
-    draw_pixel(45, 206, LUNA_COLOR_RED);
+    // loop through all the projected point and rendering them
+    for (int i = 0; i < NUMBER_OF_POINTS; i++)
+    {
+        // current point
+        vect2_t projected_point = projected_cube_points[i];
+
+        draw_rect(
+            projected_point.x + (window_width / 2),
+            projected_point.y + (window_height / 2),
+            4,
+            4,
+            LUNA_COLOR_YELLOW
+        );
+    }
 
     // preparing the color buffer to render
     // * after that the color buffer can be modified without impact on rendering target
     translate_color_buffer();
 
+    // clearing the color buffer after putting it to the rendering target
+    fill_color_buffer(LUNA_COLOR_BLACK);
 
-    // Updating the screen
+    // updating the screen
     SDL_RenderPresent(renderer);
 }
 

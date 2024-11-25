@@ -16,7 +16,10 @@ void fill_color_buffer(uint32_t color)
 
 void draw_pixel(int x, int y, uint32_t color)
 {
-    if (x < window_width && y < window_height)
+    if (x >= 0 && 
+        x < window_width && 
+        y >= 0 && 
+        y < window_height)
     {
         color_buffer[y * window_width + x] = color;
     }
@@ -59,7 +62,7 @@ void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color)
     {
         for (int x = x_pos; x < x_pos + width; x++)
         {
-            color_buffer[y * window_width + x] = color;
+            draw_pixel(x, y, color);
         }
     }
 }
