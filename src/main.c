@@ -13,6 +13,8 @@ vect2_t projected_cube_points[NUMBER_OF_POINTS]; // projected points for the cub
 
 // position of the camera
 vect3_t camera_position = { 0, 0, -5 };
+// Test rotating
+vect3_t cube_rotation = { 0, 0, 0 };
 
 float fov_factor = 640;
 
@@ -95,15 +97,24 @@ vect2_t project(vect3_t point)
 /// @brief Updates the states of the different objects in program 
 void update(void)
 {
+    // rotating the cube
+    cube_rotation.x += 0.008;
+    cube_rotation.y += 0.008;
+    cube_rotation.z += 0.009;
+
     // projecting all the points of the cube
     for (int i = 0; i < NUMBER_OF_POINTS; i++)
     {
         vect3_t point = cube_points[i];
 
-        // shifting the cube a little bit farther
-        point.z -= camera_position.z;
+        vect3_t transformed_point = vect3_rotate_y(point, cube_rotation.y);
+        transformed_point = vect3_rotate_x(transformed_point, cube_rotation.x);
+        transformed_point = vect3_rotate_z(transformed_point, cube_rotation.z);
 
-        vect2_t projected_point = project(point);
+        // translating the cube a little bit farther
+        transformed_point.z -= camera_position.z;
+
+        vect2_t projected_point = project(transformed_point);
 
         projected_cube_points[i] = projected_point;
     }
