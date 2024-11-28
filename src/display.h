@@ -8,6 +8,10 @@
 #include <SDL2/SDL.h>
 
 
+#define FRAME_RATE 165
+#define FRAME_TARGET_TIME (1000 / FRAME_RATE)
+
+
 /// @brief SDL window instance
 extern SDL_Window* window;
 /// @brief SDL renderer instance

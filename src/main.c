@@ -21,6 +21,8 @@ float fov_factor = 640;
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
 
+int previous_frame_time = 0;
+
 
 /// @brief Sets up a program before the render loop
 void setup(void)
@@ -97,10 +99,14 @@ vect2_t project(vect3_t point)
 /// @brief Updates the states of the different objects in program 
 void update(void)
 {
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(), previous_frame_time + FRAME_TARGET_TIME));
+
+    previous_frame_time = SDL_GetTicks();
+
     // rotating the cube
-    cube_rotation.x += 0.008;
-    cube_rotation.y += 0.008;
-    cube_rotation.z += 0.009;
+    cube_rotation.x += 0.005;
+    cube_rotation.y += 0.005;
+    cube_rotation.z += 0.005;
 
     // projecting all the points of the cube
     for (int i = 0; i < NUMBER_OF_POINTS; i++)
