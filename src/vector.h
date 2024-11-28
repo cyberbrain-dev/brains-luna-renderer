@@ -19,6 +19,13 @@ typedef struct
 } vect3_t;
 
 
+/// @brief Rotating the vector by three axis
+/// @param v a vector to be rotated
+/// @param rotation the vector of angles in radians
+/// @return The result of rotating `v` vector
+vect3_t vect3_rotate(vect3_t v, vect3_t rotation);
+
+
 /// @brief Rotating the vector by X
 /// @param v a vector to be rotated
 /// @param angle the angle of rotation in radians

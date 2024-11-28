@@ -1,5 +1,14 @@
 #include "vector.h"
 
+vect3_t vect3_rotate(vect3_t v, vect3_t rotation)
+{
+    vect3_t rotated_vector = vect3_rotate_x(v, rotation.x);
+    rotated_vector = vect3_rotate_y(rotated_vector, rotation.y);
+    rotated_vector = vect3_rotate_z(rotated_vector, rotation.z);
+
+    return rotated_vector;
+}
+
 vect3_t vect3_rotate_x(vect3_t v, float angle)
 {
     vect3_t rotated_vector = {

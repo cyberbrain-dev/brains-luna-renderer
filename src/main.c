@@ -107,9 +107,7 @@ void update(void)
     {
         vect3_t point = cube_points[i];
 
-        vect3_t transformed_point = vect3_rotate_y(point, cube_rotation.y);
-        transformed_point = vect3_rotate_x(transformed_point, cube_rotation.x);
-        transformed_point = vect3_rotate_z(transformed_point, cube_rotation.z);
+        vect3_t transformed_point = vect3_rotate(point, cube_rotation);
 
         // translating the cube a little bit farther
         transformed_point.z -= camera_position.z;
