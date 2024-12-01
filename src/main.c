@@ -1,22 +1,21 @@
-#define NUMBER_OF_POINTS 9 * 9 * 9
-
 #include <stdbool.h>
 
 #include "display.h"
 #include "draw.h"
+
 #include "lunacolors.h"
+
+#include "project.h"
 #include "vector.h"
+#include "mesh.h"
 
 
-vect3_t cube_points[NUMBER_OF_POINTS]; // A test 9x9x9 cube
-vect2_t projected_cube_points[NUMBER_OF_POINTS]; // projected points for the cube
+triangle_t triangles_to_render[N_MESH_FACES];
 
 // position of the camera
-vect3_t camera_position = { 0, 0, -5 };
+vector3_t camera_position = { 0, 0, -5 };
 // Test rotating
-vect3_t cube_rotation = { 0, 0, 0 };
-
-float fov_factor = 640;
+vector3_t cube_rotation = { 0, 0, 0 };
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -38,27 +37,6 @@ void setup(void)
         window_width,
         window_height
     );
-
-
-    // start loading my array of cube vectors
-    // from -1 to 1 (in this 9x9x9 cube)
-    int cube_array_counter = 0;
-
-    for (float x = -1; x <= 1; x += 0.25f)
-    {
-        for (float y = -1; y <= 1; y += 0.25f)
-        {
-            for (float z = -1; z <= 1; z += 0.25f)
-            {
-                // creating a new vector and putting it in the cube array
-                vect3_t new_point = { x, y, z };
-                cube_points[cube_array_counter] = new_point;
-
-                // moving to the next point in the cube
-                cube_array_counter++;
-            }
-        }
-    }
 }
 
 /// @brief Checking any input the user does 
@@ -83,19 +61,6 @@ void process_input(void)
 
 }
 
-/// @brief Projects a 3D point in 2D
-/// @param point 3D point
-/// @returns A projected 2D-point 
-vect2_t project(vect3_t point)
-{
-    vect2_t projected_point = {
-        .x = (fov_factor * point.x) / point.z,
-        .y = (fov_factor * point.y) / point.z
-    };
-
-    return projected_point;
-}
-
 /// @brief Updates the states of the different objects in program 
 void update(void)
 {
@@ -113,19 +78,45 @@ void update(void)
     cube_rotation.y += 0.005;
     cube_rotation.z += 0.005;
 
-    // projecting all the points of the cube
-    for (int i = 0; i < NUMBER_OF_POINTS; i++)
+    // looping through all the triangles of the mesh
+    for (int i = 0; i < N_MESH_FACES; i++)
     {
-        vect3_t point = cube_points[i];
+        face_t current_face = mesh_faces[i];
 
-        vect3_t transformed_point = vect3_rotate(point, cube_rotation);
+        // getting vertices of current face
+        vector3_t current_face_vertices[3] = {
+            mesh_vertices[current_face.a - 1],
+            mesh_vertices[current_face.b - 1],
+            mesh_vertices[current_face.c - 1]
+        };
 
-        // translating the cube a little bit farther
-        transformed_point.z -= camera_position.z;
 
-        vect2_t projected_point = project(transformed_point);
+        // a 2d triangle with projected vertices
+        triangle_t projected_triangle;
 
-        projected_cube_points[i] = projected_point;
+        // looping through all three vertices of this current face to apply transformations
+        for (int j = 0; j < 3; j++)
+        {
+            vector3_t transformed_vertex = current_face_vertices[j];
+
+            transformed_vertex = vect3_rotate(transformed_vertex, cube_rotation);
+
+            // translating the vertex away from the camera
+            transformed_vertex.z -= camera_position.z;
+
+            // projecting the transformed point
+            vector2_t projected_vertex = project(transformed_vertex);
+
+            // scale and translating projected points to the middle of the screen
+            projected_vertex.x += window_width / 2;
+            projected_vertex.y += window_height / 2;
+
+            // setting the projected vertex to triangle's point
+            projected_triangle.points[j] = projected_vertex;
+        }
+
+        // saving the projected triangle to be rendered
+        triangles_to_render[i] = projected_triangle;
     }
 }
 
@@ -134,23 +125,18 @@ void render(void)
 {
     draw_dotted_grid(10, 10, LUNA_COLOR_GREY);
 
-    // loop through all the projected point and rendering them
-    for (int i = 0; i < NUMBER_OF_POINTS; i++)
+    for (int i = 0; i < N_MESH_FACES; i++)
     {
-        // current point
-        vect2_t projected_point = projected_cube_points[i];
+        triangle_t triangle = triangles_to_render[i];
 
-        draw_rect(
-            projected_point.x + (window_width / 2),
-            projected_point.y + (window_height / 2),
-            4,
-            4,
-            LUNA_COLOR_YELLOW
-        );
+        for (int j = 0; j < 3; j++)
+        {
+            draw_pixel(triangle.points[j].x, triangle.points[j].y, LUNA_COLOR_YELLOW);
+        }
     }
 
     // preparing the color buffer to render
-    // * after that the color buffer can be modified without impact on rendering target
+    // after that the color buffer can be modified without impact on rendering target
     translate_color_buffer();
 
     // clearing the color buffer after putting it to the rendering target
