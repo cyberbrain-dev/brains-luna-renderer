@@ -105,7 +105,7 @@ void update(void)
             transformed_vertex.z -= camera_position.z;
 
             // projecting the transformed point
-            vector2_t projected_vertex = project(transformed_vertex);
+            vector2_t projected_vertex = project_perspective(transformed_vertex);
 
             // scale and translating projected points to the middle of the screen
             projected_vertex.x += window_width / 2;
@@ -127,12 +127,7 @@ void render(void)
 
     for (int i = 0; i < N_MESH_FACES; i++)
     {
-        triangle_t triangle = triangles_to_render[i];
-
-        for (int j = 0; j < 3; j++)
-        {
-            draw_pixel(triangle.points[j].x, triangle.points[j].y, LUNA_COLOR_YELLOW);
-        }
+        draw_empty_triangle(triangles_to_render[i], LUNA_COLOR_YELLOW);
     }
 
     // preparing the color buffer to render
