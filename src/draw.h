@@ -2,8 +2,10 @@
 #define DRAW_H
 
 #include <stdint.h>
+#include <math.h>
 
 #include "display.h"
+#include "triangle.h"
 
 /// @brief Fills the color buffer with the color passed
 /// @param color the window will be filled by this color
@@ -30,5 +32,11 @@ void draw_dotted_grid(int cell_width, int cell_height, uint32_t color);
 /// @param height rectangle's height
 /// @param color rectangle's color
 void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color);
+/// @brief Draws a line using DDA algorithm
+void draw_line_dda(int x0, int y0, int x1, int y1, uint32_t color);
+/// @brief Draws a line using Bresenham's algorithm
+void draw_line_bresenham(int x0, int y0, int x1, int y1, uint32_t color);
+/// @brief Draws a trangle
+void draw_empty_triangle(triangle_t triangle, uint32_t color);
 
 #endif
