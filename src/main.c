@@ -1,5 +1,7 @@
 #include <stdbool.h>
 
+#include "../lib/clist/list.h"
+
 #include "display.h"
 #include "draw.h"
 
@@ -9,14 +11,12 @@
 #include "vector.h"
 #include "mesh.h"
 
-// testing git
 
-triangle_t triangles_to_render[N_MESH_FACES];
+/// @brief list of the triangles to be rendered
+list_t* triangles_to_render;
 
 // position of the camera
 vector3_t camera_position = { 0, 0, -5 };
-// Test rotating
-vector3_t cube_rotation = { 0, 0, 0 };
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -38,6 +38,10 @@ void setup(void)
         window_width,
         window_height
     );
+
+    // setting up the mesh
+    mesh_init();
+    mesh_load_cube();
 }
 
 /// @brief Checking any input the user does 
@@ -65,32 +69,32 @@ void process_input(void)
 /// @brief Updates the states of the different objects in program 
 void update(void)
 {
-    int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
-
-    if (time_to_wait >= 0 && time_to_wait <= FRAME_TARGET_TIME)
-    {
-        SDL_Delay(time_to_wait);
-    }
+    // if we have rendered everything kinda fast, 
+    // we should wait until the time for rendering another frame comes
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(), previous_frame_time + FRAME_TARGET_TIME))
 
     previous_frame_time = SDL_GetTicks();
 
+    // initializing a list of the triangles to be rendered
+    triangles_to_render = list_create(sizeof(triangle_t), 10);
+
     // rotating the cube
-    cube_rotation.x += 0.005;
-    cube_rotation.y += 0.005;
-    cube_rotation.z += 0.005;
+    mesh.rotation.x += 0.005;
+    mesh.rotation.y += 0.005;
+    mesh.rotation.z += 0.005;
 
     // looping through all the triangles of the mesh
-    for (int i = 0; i < N_MESH_FACES; i++)
+    for (int i = 0; i < mesh.faces->count; i++)
     {
-        face_t current_face = mesh_faces[i];
+        // getting current face
+        face_t current_face = *(face_t*)list_get(mesh.faces, i);
 
         // getting vertices of current face
         vector3_t current_face_vertices[3] = {
-            mesh_vertices[current_face.a - 1],
-            mesh_vertices[current_face.b - 1],
-            mesh_vertices[current_face.c - 1]
+            *(vector3_t*)list_get(mesh.vertices, current_face.a - 1),
+            *(vector3_t*)list_get(mesh.vertices, current_face.b - 1),
+            *(vector3_t*)list_get(mesh.vertices, current_face.c - 1),
         };
-
 
         // a 2d triangle with projected vertices
         triangle_t projected_triangle;
@@ -100,7 +104,7 @@ void update(void)
         {
             vector3_t transformed_vertex = current_face_vertices[j];
 
-            transformed_vertex = vect3_rotate(transformed_vertex, cube_rotation);
+            transformed_vertex = vect3_rotate(transformed_vertex, mesh.rotation);
 
             // translating the vertex away from the camera
             transformed_vertex.z -= camera_position.z;
@@ -117,7 +121,7 @@ void update(void)
         }
 
         // saving the projected triangle to be rendered
-        triangles_to_render[i] = projected_triangle;
+        list_add(triangles_to_render, &projected_triangle);
     }
 }
 
@@ -126,10 +130,13 @@ void render(void)
 {
     draw_dotted_grid(10, 10, LUNA_COLOR_GREY);
 
-    for (int i = 0; i < N_MESH_FACES; i++)
+    for (int i = 0; i < triangles_to_render->count; i++)
     {
-        draw_empty_triangle(triangles_to_render[i], LUNA_COLOR_YELLOW);
+        draw_empty_triangle(*(triangle_t*)list_get(triangles_to_render, i), LUNA_COLOR_YELLOW);
     }
+
+    // clearing the list of triangles to render as we've already rendered everything
+    list_free(triangles_to_render);
 
     // preparing the color buffer to render
     // after that the color buffer can be modified without impact on rendering target
@@ -140,6 +147,16 @@ void render(void)
 
     // updating the screen
     SDL_RenderPresent(renderer);
+}
+
+
+/// @brief Releases all the lists (dynamic arrays) used in the app
+void free_resources(void)
+{
+    free(color_buffer);
+
+    list_free(mesh.faces);
+    list_free(mesh.vertices);
 }
 
 
