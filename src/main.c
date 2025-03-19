@@ -1,6 +1,6 @@
 #include <stdbool.h>
 
-#include "../lib/clist/list.h"
+#include "list.h"
 
 #include "display.h"
 #include "draw.h"
@@ -13,7 +13,7 @@
 
 
 /// @brief list of the triangles to be rendered
-list_t* triangles_to_render;
+triangle_t* triangles_to_render = NULL;
 
 // position of the camera
 vector3_t camera_position = { 0, 0, -5 };
@@ -40,8 +40,7 @@ void setup(void)
     );
 
     // setting up the mesh
-    mesh_init();
-    mesh_load_cube();
+    mesh_load_obj("assets/f22.obj");
 }
 
 /// @brief Checking any input the user does 
@@ -76,24 +75,23 @@ void update(void)
     previous_frame_time = SDL_GetTicks();
 
     // initializing a list of the triangles to be rendered
-    triangles_to_render = list_create(sizeof(triangle_t), 10);
+    triangles_to_render = NULL;
 
     // rotating the cube
-    mesh.rotation.x += 0.005;
+    mesh.rotation.x = 180;
     mesh.rotation.y += 0.005;
-    mesh.rotation.z += 0.005;
 
     // looping through all the triangles of the mesh
-    for (int i = 0; i < mesh.faces->count; i++)
+    for (int i = 0; i < list_length(mesh.faces); i++)
     {
         // getting current face
-        face_t current_face = *(face_t*)list_get(mesh.faces, i);
+        face_t current_face = mesh.faces[i];
 
         // getting vertices of current face
         vector3_t current_face_vertices[3] = {
-            *(vector3_t*)list_get(mesh.vertices, current_face.a - 1),
-            *(vector3_t*)list_get(mesh.vertices, current_face.b - 1),
-            *(vector3_t*)list_get(mesh.vertices, current_face.c - 1),
+            mesh.vertices[current_face.a - 1],
+            mesh.vertices[current_face.b - 1],
+            mesh.vertices[current_face.c - 1],
         };
 
         // a 2d triangle with projected vertices
@@ -121,7 +119,7 @@ void update(void)
         }
 
         // saving the projected triangle to be rendered
-        list_add(triangles_to_render, &projected_triangle);
+        list_push(triangles_to_render, projected_triangle);
     }
 }
 
@@ -130,9 +128,9 @@ void render(void)
 {
     draw_dotted_grid(10, 10, LUNA_COLOR_GREY);
 
-    for (int i = 0; i < triangles_to_render->count; i++)
+    for (int i = 0; i < list_length(triangles_to_render); i++)
     {
-        draw_empty_triangle(*(triangle_t*)list_get(triangles_to_render, i), LUNA_COLOR_YELLOW);
+        draw_empty_triangle(triangles_to_render[i], LUNA_COLOR_YELLOW);
     }
 
     // clearing the list of triangles to render as we've already rendered everything

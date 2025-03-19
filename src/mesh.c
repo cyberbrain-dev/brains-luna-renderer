@@ -43,25 +43,74 @@ face_t cube_faces[N_CUBE_FACES] = {
     { 6, 1, 4 }
 };
 
-void mesh_init(void) 
-{
-    mesh.vertices = list_create(sizeof(vector3_t), 6);
-    mesh.faces = list_create(sizeof(face_t), 6);
-}
-
 void mesh_load_cube(void) 
 {
     // looping through all the cube vertices
     for (int i = 0; i < N_CUBE_VERTICES; i++)
     {
         vector3_t vertex = cube_vertices[i];
-        list_add(mesh.vertices, &vertex);
+        list_push(mesh.vertices, vertex);
     }
 
     // looping through all the cube faces
     for (int i = 0; i < N_CUBE_FACES; i++)
     {
         face_t face = cube_faces[i];
-        list_add(mesh.faces, &face);
+        list_push(mesh.faces, face);
+    }
+}
+
+void mesh_load_obj(const char* filepath)
+{
+    // getting the obj file 
+    FILE* obj_file = fopen(filepath, "r");
+    // if something went wrong...
+    if (obj_file == NULL)
+    {
+        // ...we would print an error...
+        fprintf(stderr, "cannot read the obj file");
+
+        // ..and quit the program
+        exit(-1);
+    }
+
+    // a string that contains info whether about a vertex or a face
+    char current_str[256];
+
+    // reading all the strings in the obj file
+    while (fgets(current_str, sizeof(current_str), obj_file) != NULL)
+    {
+        // if this is a vertex...
+        if (current_str[0] == 'v' && current_str[1] == ' ')
+        {
+            // creating a vertex
+            vector3_t vertex;
+
+            // reading the vertex data
+            sscanf(
+                current_str, 
+                "v %f %f %f", 
+                &vertex.x, 
+                &vertex.y, 
+                &vertex.z
+            );
+
+            list_push(mesh.vertices, vertex);
+        }
+        else if (current_str[0] == 'f' && current_str[1] == ' ')
+        {
+            // creating a face
+            face_t face;
+
+            sscanf(
+                current_str,
+                "f %d/%*d/%*d %d/%*d/%*d %d/%*d/%*d",
+                &face.a,
+                &face.b,
+                &face.c
+            );
+
+            list_push(mesh.faces, face);
+        }
     }
 }
