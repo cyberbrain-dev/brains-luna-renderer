@@ -102,7 +102,7 @@ void update(void)
         {
             vector3_t transformed_vertex = current_face_vertices[j];
 
-            transformed_vertex = vect3_rotate(transformed_vertex, mesh.rotation);
+            transformed_vertex = vector3_rotate(transformed_vertex, mesh.rotation);
 
             // translating the vertex away from the camera
             transformed_vertex.z -= camera_position.z;

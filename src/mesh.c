@@ -81,7 +81,7 @@ void mesh_load_obj(const char* filepath)
     while (fgets(current_str, sizeof(current_str), obj_file) != NULL)
     {
         // if this is a vertex...
-        if (current_str[0] == 'v' && current_str[1] == ' ')
+        if (strncmp(current_str, "v ", 2) == 0)
         {
             // creating a vertex
             vector3_t vertex;
@@ -97,7 +97,7 @@ void mesh_load_obj(const char* filepath)
 
             list_push(mesh.vertices, vertex);
         }
-        else if (current_str[0] == 'f' && current_str[1] == ' ')
+        else if (strncmp(current_str, "f ", 2) == 0)
         {
             // creating a face
             face_t face;
