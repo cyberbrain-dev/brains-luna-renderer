@@ -1,4 +1,5 @@
 build:
+	mkdir -p bin
 	gcc -Wall -std=c99 src/*.c -o bin/luna -lSDL2 -lm
 
 run:
