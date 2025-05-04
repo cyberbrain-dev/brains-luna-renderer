@@ -12,8 +12,8 @@
 #include "vector.h"
 #include "mesh.h"
 
-#ifndef BLR_VERSION
-#define BLR_VERSION "1.0.0"
+#ifndef LUNA_VERSION
+#define LUNA_VERSION "1.0.0"
 #endif
 
 /// @brief Contains a path to the model that must be displayed 
@@ -47,7 +47,7 @@ void setup(void)
         window_height
     );
 
-#ifdef BLR_DEBUG
+#ifdef LUNA_DEBUG
     // setting up the mesh
     mesh_load_obj("../assets/cube.obj");
 #else
@@ -206,7 +206,7 @@ int main(int argc, const char** argv)
     // parsing arguments of program
     if (argc == 2 && strcmp(argv[1], "-version") == 0) 
     {
-        printf("Brains Luna Renderer v%s\n", BLR_VERSION);
+        printf("Luna Renderer v%s\n", LUNA_VERSION);
         printf("© 2025 Cyberbrain. All Rights Reserved.\n");
         exit(0);
     }

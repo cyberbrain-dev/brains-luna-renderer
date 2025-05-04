@@ -20,7 +20,7 @@ bool initialize_window(void)
         return false;
     }
 
-#ifndef BLR_DEBUG
+#ifndef LUNA_DEBUG
     // using the SDL to query the resolution of my monitor...
     SDL_DisplayMode display_mode;
     SDL_GetCurrentDisplayMode(0, &display_mode);
@@ -33,7 +33,7 @@ bool initialize_window(void)
 
     // initializing a SDL window
     window = SDL_CreateWindow(
-        "Brains Luna Renderer",
+        "Luna Renderer",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         window_width,
@@ -57,7 +57,7 @@ bool initialize_window(void)
         return false;
     }
 
-#ifndef BLR_DEBUG
+#ifndef LUNA_DEBUG
     // setting the window fullscreen
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 #endif
