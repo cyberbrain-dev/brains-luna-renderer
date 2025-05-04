@@ -68,7 +68,7 @@ void mesh_load_obj(const char* filepath)
     if (obj_file == NULL)
     {
         // ...we would print an error...
-        fprintf(stderr, "cannot read the obj file");
+        fprintf(stderr, "Luna: Cannot read the model file. Check the path and ensure that the file exists.\n");
 
         // ..and quit the program
         exit(-1);

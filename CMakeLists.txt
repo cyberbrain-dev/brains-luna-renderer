@@ -9,6 +9,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+add_definitions(-DBLR_VERSION="${PROJECT_VERSION}")
+
 add_executable(
     brains-luna-renderer
 

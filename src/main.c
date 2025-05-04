@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <string.h>
 
 #include "list.h"
 
@@ -11,6 +12,13 @@
 #include "vector.h"
 #include "mesh.h"
 
+#ifndef BLR_VERSION
+#define BLR_VERSION "1.0.0"
+#endif
+
+/// @brief Contains a path to the model that must be displayed 
+///        during the work of application
+const char* path_to_model = NULL;
 
 /// @brief list of the triangles to be rendered
 triangle_t* triangles_to_render = NULL;
@@ -44,7 +52,7 @@ void setup(void)
     mesh_load_obj("../assets/cube.obj");
 #else
     // setting up the mesh
-    mesh_load_obj("assets/cube.obj");
+    mesh_load_obj(path_to_model);
 #endif
 }
 
@@ -193,10 +201,26 @@ void free_resources(void)
 }
 
 
-int main()
+int main(int argc, const char** argv)
 {
-    is_running = initialize_window();
+    // parsing arguments of program
+    if (argc == 2 && strcmp(argv[1], "-version") == 0) 
+    {
+        printf("Brains Luna Renderer v%s\n", BLR_VERSION);
+        printf("© 2025 Cyberbrain. All Rights Reserved.\n");
+        exit(0);
+    }
+    else if (argc == 3 && strcmp(argv[1], "-m") == 0)
+    {
+        path_to_model = argv[2];
+    }
+    else
+    {
+        fprintf(stderr, "Luna: Invalid arguments.\n");
+        exit(-1);
+    }
 
+    is_running = initialize_window();
 
     // A simple game loop is down there...
     setup();

@@ -16,7 +16,7 @@ bool initialize_window(void)
     // initializing SDL subsystems...
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        fprintf(stderr, "An error occured initializing SDL subsystems.\n");
+        fprintf(stderr, "Luna: An error occured initializing SDL subsystems.\n");
         return false;
     }
 
@@ -43,7 +43,7 @@ bool initialize_window(void)
 
     if (!window)
     {
-        fprintf(stderr, "An error occured initializing SDL window.\n");
+        fprintf(stderr, "Luna: An error occured initializing SDL window.\n");
         return false;
     }
 
@@ -53,7 +53,7 @@ bool initialize_window(void)
 
     if (!renderer)
     {
-        fprintf(stderr, "An error occured initializing SDL renderer.\n");
+        fprintf(stderr, "Luna: An error occured initializing SDL renderer.\n");
         return false;
     }
 
