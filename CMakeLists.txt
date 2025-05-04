@@ -13,7 +13,6 @@ add_executable(
     brains-luna-renderer
 
     
-    
     src/display.h
     src/display.c
 
@@ -37,6 +36,9 @@ add_executable(
     
     src/main.c
 )
+
+# place a comment here when building, remove when debugging
+# target_compile_definitions(brains-luna-renderer PRIVATE BLR_DEBUG)
 
 set_property(TARGET brains-luna-renderer PROPERTY C_STANDARD 17)
 

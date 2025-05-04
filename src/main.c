@@ -39,8 +39,13 @@ void setup(void)
         window_height
     );
 
+#ifdef BLR_DEBUG
     // setting up the mesh
     mesh_load_obj("../assets/cube.obj");
+#else
+    // setting up the mesh
+    mesh_load_obj("assets/cube.obj");
+#endif
 }
 
 /// @brief Checking any input the user does 
@@ -107,7 +112,7 @@ void update(void)
             transformed_vertex = vector3_rotate(transformed_vertex, mesh.rotation);
 
             // moving all the vertices a bit "inside" the monitor
-            transformed_vertex.z -= 5;
+            transformed_vertex.z += 5;
 
             // saving the vertex
             transformed_vertices[j] = transformed_vertex;

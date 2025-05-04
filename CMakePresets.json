@@ -2,7 +2,7 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "defaultLinux",
+            "name": "Linux_Debug",
             "description": "Use for building for linux (Ubuntu)",
             "hidden": false,
             "generator": "Unix Makefiles",
