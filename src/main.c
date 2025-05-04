@@ -16,7 +16,7 @@
 triangle_t* triangles_to_render = NULL;
 
 // position of the camera
-vector3_t camera_position = { 0, 0, -5 };
+vector3_t camera_position = { 0, 0, 0 };
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -40,7 +40,7 @@ void setup(void)
     );
 
     // setting up the mesh
-    mesh_load_obj("assets/f22.obj");
+    mesh_load_obj("../assets/cube.obj");
 }
 
 /// @brief Checking any input the user does 
@@ -78,8 +78,9 @@ void update(void)
     triangles_to_render = NULL;
 
     // rotating the cube
-    mesh.rotation.x = 180;
+    mesh.rotation.x += 0.005;
     mesh.rotation.y += 0.005;
+    mesh.rotation.z += 0.005;
 
     // looping through all the triangles of the mesh
     for (int i = 0; i < list_length(mesh.faces); i++)
@@ -94,21 +95,50 @@ void update(void)
             mesh.vertices[current_face.c - 1],
         };
 
-        // a 2d triangle with projected vertices
-        triangle_t projected_triangle;
+        // a little array that'll help us to save the transformed vertices
+        vector3_t transformed_vertices[3];
 
         // looping through all three vertices of this current face to apply transformations
         for (int j = 0; j < 3; j++)
         {
             vector3_t transformed_vertex = current_face_vertices[j];
 
+            // applying the rotation
             transformed_vertex = vector3_rotate(transformed_vertex, mesh.rotation);
 
-            // translating the vertex away from the camera
-            transformed_vertex.z -= camera_position.z;
+            // moving all the vertices a bit "inside" the monitor
+            transformed_vertex.z -= 5;
 
+            // saving the vertex
+            transformed_vertices[j] = transformed_vertex;
+        }
+
+        vector3_t a = transformed_vertices[0];    /*   a   */
+        vector3_t b = transformed_vertices[1];    /*  / \  */ 
+        vector3_t c = transformed_vertices[2];    /* c---b */
+
+        // getting two vectors of the face to find the cross product (face normal)
+        vector3_t ab = vector3_sub(b, a);
+        vector3_t ac = vector3_sub(c, a);
+
+        // computing the face normal
+        vector3_t normal = vector3_crosspr(ab, ac);
+
+        // finding the vector between a point in the triangle and the camera origin
+        vector3_t camera_ray = vector3_sub(camera_position, a);
+
+        // bypass the triangle if it is looking away from the camera
+        if (vector3_dotpr(normal, camera_ray) < 0) 
+            continue;
+
+        // a 2d triangle with projected vertices
+        triangle_t projected_triangle;
+
+        // looping through all three vertices to perform projection
+        for (int j = 0; j < 3; j++)
+        {
             // projecting the transformed point
-            vector2_t projected_vertex = project_perspective(transformed_vertex);
+            vector2_t projected_vertex = project_perspective(transformed_vertices[j]);
 
             // scale and translating projected points to the middle of the screen
             projected_vertex.x += window_width / 2;
