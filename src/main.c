@@ -1,5 +1,7 @@
 #include <stdbool.h>
 
+#include "list.h"
+
 #include "display.h"
 #include "draw.h"
 
@@ -10,12 +12,11 @@
 #include "mesh.h"
 
 
-triangle_t triangles_to_render[N_MESH_FACES];
+/// @brief list of the triangles to be rendered
+triangle_t* triangles_to_render = NULL;
 
 // position of the camera
-vector3_t camera_position = { 0, 0, -5 };
-// Test rotating
-vector3_t cube_rotation = { 0, 0, 0 };
+vector3_t camera_position = { 0, 0, 0 };
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -37,6 +38,14 @@ void setup(void)
         window_width,
         window_height
     );
+
+#ifdef BLR_DEBUG
+    // setting up the mesh
+    mesh_load_obj("../assets/cube.obj");
+#else
+    // setting up the mesh
+    mesh_load_obj("assets/cube.obj");
+#endif
 }
 
 /// @brief Checking any input the user does 
@@ -64,48 +73,77 @@ void process_input(void)
 /// @brief Updates the states of the different objects in program 
 void update(void)
 {
-    int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
-
-    if (time_to_wait >= 0 && time_to_wait <= FRAME_TARGET_TIME)
-    {
-        SDL_Delay(time_to_wait);
-    }
+    // if we have rendered everything kinda fast, 
+    // we should wait until the time for rendering another frame comes
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(), previous_frame_time + FRAME_TARGET_TIME))
 
     previous_frame_time = SDL_GetTicks();
 
+    // initializing a list of the triangles to be rendered
+    triangles_to_render = NULL;
+
     // rotating the cube
-    cube_rotation.x += 0.005;
-    cube_rotation.y += 0.005;
-    cube_rotation.z += 0.005;
+    mesh.rotation.x += 0.005;
+    mesh.rotation.y += 0.005;
+    mesh.rotation.z += 0.005;
 
     // looping through all the triangles of the mesh
-    for (int i = 0; i < N_MESH_FACES; i++)
+    for (int i = 0; i < list_length(mesh.faces); i++)
     {
-        face_t current_face = mesh_faces[i];
+        // getting current face
+        face_t current_face = mesh.faces[i];
 
         // getting vertices of current face
         vector3_t current_face_vertices[3] = {
-            mesh_vertices[current_face.a - 1],
-            mesh_vertices[current_face.b - 1],
-            mesh_vertices[current_face.c - 1]
+            mesh.vertices[current_face.a - 1],
+            mesh.vertices[current_face.b - 1],
+            mesh.vertices[current_face.c - 1],
         };
 
-
-        // a 2d triangle with projected vertices
-        triangle_t projected_triangle;
+        // a little array that'll help us to save the transformed vertices
+        vector3_t transformed_vertices[3];
 
         // looping through all three vertices of this current face to apply transformations
         for (int j = 0; j < 3; j++)
         {
             vector3_t transformed_vertex = current_face_vertices[j];
 
-            transformed_vertex = vect3_rotate(transformed_vertex, cube_rotation);
+            // applying the rotation
+            transformed_vertex = vector3_rotate(transformed_vertex, mesh.rotation);
 
-            // translating the vertex away from the camera
-            transformed_vertex.z -= camera_position.z;
+            // moving all the vertices a bit "inside" the monitor
+            transformed_vertex.z += 5;
 
+            // saving the vertex
+            transformed_vertices[j] = transformed_vertex;
+        }
+
+        vector3_t a = transformed_vertices[0];    /*   a   */
+        vector3_t b = transformed_vertices[1];    /*  / \  */ 
+        vector3_t c = transformed_vertices[2];    /* c---b */
+
+        // getting two vectors of the face to find the cross product (face normal)
+        vector3_t ab = vector3_sub(b, a);
+        vector3_t ac = vector3_sub(c, a);
+
+        // computing the face normal
+        vector3_t normal = vector3_crosspr(ab, ac);
+
+        // finding the vector between a point in the triangle and the camera origin
+        vector3_t camera_ray = vector3_sub(camera_position, a);
+
+        // bypass the triangle if it is looking away from the camera
+        if (vector3_dotpr(normal, camera_ray) < 0) 
+            continue;
+
+        // a 2d triangle with projected vertices
+        triangle_t projected_triangle;
+
+        // looping through all three vertices to perform projection
+        for (int j = 0; j < 3; j++)
+        {
             // projecting the transformed point
-            vector2_t projected_vertex = project_perspective(transformed_vertex);
+            vector2_t projected_vertex = project_perspective(transformed_vertices[j]);
 
             // scale and translating projected points to the middle of the screen
             projected_vertex.x += window_width / 2;
@@ -116,7 +154,7 @@ void update(void)
         }
 
         // saving the projected triangle to be rendered
-        triangles_to_render[i] = projected_triangle;
+        list_push(triangles_to_render, projected_triangle);
     }
 }
 
@@ -125,10 +163,13 @@ void render(void)
 {
     draw_dotted_grid(10, 10, LUNA_COLOR_GREY);
 
-    for (int i = 0; i < N_MESH_FACES; i++)
+    for (int i = 0; i < list_length(triangles_to_render); i++)
     {
         draw_empty_triangle(triangles_to_render[i], LUNA_COLOR_YELLOW);
     }
+
+    // clearing the list of triangles to render as we've already rendered everything
+    list_free(triangles_to_render);
 
     // preparing the color buffer to render
     // after that the color buffer can be modified without impact on rendering target
@@ -139,6 +180,16 @@ void render(void)
 
     // updating the screen
     SDL_RenderPresent(renderer);
+}
+
+
+/// @brief Releases all the lists (dynamic arrays) used in the app
+void free_resources(void)
+{
+    free(color_buffer);
+
+    list_free(mesh.faces);
+    list_free(mesh.vertices);
 }
 
 

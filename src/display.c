@@ -20,6 +20,7 @@ bool initialize_window(void)
         return false;
     }
 
+#ifndef BLR_DEBUG
     // using the SDL to query the resolution of my monitor...
     SDL_DisplayMode display_mode;
     SDL_GetCurrentDisplayMode(0, &display_mode);
@@ -27,16 +28,17 @@ bool initialize_window(void)
     // ...and setting the resolution 
     window_width = display_mode.w;
     window_height = display_mode.h;
+#endif
 
 
     // initializing a SDL window
     window = SDL_CreateWindow(
-        NULL,
+        "Brains Luna Renderer",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         window_width,
         window_height,
-        SDL_WINDOW_BORDERLESS
+        0
     );
 
     if (!window)
@@ -55,17 +57,16 @@ bool initialize_window(void)
         return false;
     }
 
-
+#ifndef BLR_DEBUG
     // setting the window fullscreen
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+#endif
 
 
     return true;
 }
 void destroy_window(void)
 {
-    free(color_buffer);
-
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
