@@ -1,0 +1,15 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "defaultLinux",
+            "description": "Use for building for linux (Ubuntu)",
+            "hidden": false,
+            "generator": "Unix Makefiles",
+            "binaryDir": "build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            } 
+        }
+    ]
+}
