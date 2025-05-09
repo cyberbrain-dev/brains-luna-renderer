@@ -5,7 +5,7 @@
 #include <math.h>
 
 #include "display.h"
-#include "triangle.h"
+#include "engine/triangle.h"
 
 /// @brief Fills the color buffer with the color passed
 /// @param color the window will be filled by this color

@@ -1,16 +1,14 @@
-#include <stdbool.h>
 #include <string.h>
+#include <vector>
 
-#include "list.h"
+#include "render/display.h"
+#include "render/draw.h"
 
-#include "display.h"
-#include "draw.h"
+#include "core/colors.h"
 
-#include "lunacolors.h"
-
-#include "project.h"
-#include "vector.h"
-#include "mesh.h"
+#include "engine/project.h"
+#include "engine/vector.h"
+#include "engine/mesh.h"
 
 #ifndef LUNA_VERSION
 #define LUNA_VERSION "1.0.0"
@@ -20,8 +18,8 @@
 ///        during the work of application
 const char* path_to_model = NULL;
 
-/// @brief list of the triangles to be rendered
-triangle_t* triangles_to_render = NULL;
+/// @brief vector of the triangles to be rendered
+std::vector<triangle_t> triangles_to_render;
 
 // position of the camera
 vector3_t camera_position = { 0, 0, 0 };
@@ -87,8 +85,7 @@ void update(void)
 
     previous_frame_time = SDL_GetTicks();
 
-    // initializing a list of the triangles to be rendered
-    triangles_to_render = NULL;
+    // initializing a vector of the triangles to be rendered
 
     // rotating the cube
     mesh.rotation.x += 0.005;
@@ -96,7 +93,7 @@ void update(void)
     mesh.rotation.z += 0.005;
 
     // looping through all the triangles of the mesh
-    for (int i = 0; i < list_length(mesh.faces); i++)
+    for (int i = 0; i < mesh.faces.size(); i++)
     {
         // getting current face
         face_t current_face = mesh.faces[i];
@@ -163,7 +160,7 @@ void update(void)
         }
 
         // saving the projected triangle to be rendered
-        list_push(triangles_to_render, projected_triangle);
+        triangles_to_render.push_back(projected_triangle);
     }
 }
 
@@ -172,13 +169,13 @@ void render(void)
 {
     draw_dotted_grid(10, 10, LUNA_COLOR_GREY);
 
-    for (int i = 0; i < list_length(triangles_to_render); i++)
+    for (int i = 0; i < triangles_to_render.size(); i++)
     {
         draw_empty_triangle(triangles_to_render[i], LUNA_COLOR_YELLOW);
     }
 
-    // clearing the list of triangles to render as we've already rendered everything
-    list_free(triangles_to_render);
+    // clearing the vector of triangles to render as we've already rendered everything
+    triangles_to_render.clear();
 
     // preparing the color buffer to render
     // after that the color buffer can be modified without impact on rendering target
@@ -192,13 +189,10 @@ void render(void)
 }
 
 
-/// @brief Releases all the lists (dynamic arrays) used in the app
+/// @brief Releases all the vectors (dynamic arrays) used in the app
 void free_resources(void)
 {
     free(color_buffer);
-
-    list_free(mesh.faces);
-    list_free(mesh.vertices);
 }
 
 

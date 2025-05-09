@@ -1,9 +1,7 @@
 #include "mesh.h"
 
 mesh_t mesh = {
-    .vertices = NULL,
-    .faces    = NULL,
-    .rotation = { 0, 0, 0 } 
+    .rotation = { 0, 0, 0 }
 };
 
 vector3_t cube_vertices[N_CUBE_VERTICES] = {
@@ -49,14 +47,14 @@ void mesh_load_cube(void)
     for (int i = 0; i < N_CUBE_VERTICES; i++)
     {
         vector3_t vertex = cube_vertices[i];
-        list_push(mesh.vertices, vertex);
+        mesh.vertices.push_back(vertex);
     }
 
     // looping through all the cube faces
     for (int i = 0; i < N_CUBE_FACES; i++)
     {
         face_t face = cube_faces[i];
-        list_push(mesh.faces, face);
+        mesh.faces.push_back(face);
     }
 }
 
@@ -95,7 +93,7 @@ void mesh_load_obj(const char* filepath)
                 &vertex.z
             );
 
-            list_push(mesh.vertices, vertex);
+            mesh.vertices.push_back(vertex);
         }
         else if (strncmp(current_str, "f ", 2) == 0)
         {
@@ -110,7 +108,7 @@ void mesh_load_obj(const char* filepath)
                 &face.c
             );
 
-            list_push(mesh.faces, face);
+            mesh.faces.push_back(face);
         }
     }
 }

@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 #include "triangle.h"
 #include "vector.h"
-#include "list.h" 
 
 #define N_CUBE_VERTICES 8
 #define N_CUBE_FACES 12     // 2 triangles per each of 6 cube faces
@@ -15,11 +15,11 @@
 /// @brief Represents a 3D-mesh
 typedef struct
 {
-    /// @brief dynamic list of 3D-vectors
-    vector3_t* vertices;
+    /// @brief dynamic vector of 3D-vectors
+    std::vector<vector3_t> vertices;
 
-    /// @brief dynamic list of faces
-    face_t* faces;
+    /// @brief dynamic vector of faces
+    std::vector<face_t> faces;
 
     /// @brief mesh's rotation
     vector3_t rotation;
