@@ -1,5 +1,4 @@
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#pragma once
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -37,5 +36,3 @@ void destroy_window(void);
 
 /// @brief Updates the SDL texture with our color buffer and copies the texture to the rendering target
 void translate_color_buffer(void);
-
-#endif

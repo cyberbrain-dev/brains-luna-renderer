@@ -1,5 +1,4 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#pragma once
 
 #include <math.h>
 
@@ -89,5 +88,3 @@ vector3_t vector3_rotate_z(vector3_t v, float angle);
 void vector3_normalize(vector3_t* v);
 
 #pragma endregion
-
-#endif

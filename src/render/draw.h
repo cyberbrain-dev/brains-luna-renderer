@@ -1,5 +1,4 @@
-#ifndef DRAW_H
-#define DRAW_H
+#pragma once
 
 #include <stdint.h>
 #include <math.h>
@@ -38,5 +37,3 @@ void draw_line_dda(int x0, int y0, int x1, int y1, uint32_t color);
 void draw_line_bresenham(int x0, int y0, int x1, int y1, uint32_t color);
 /// @brief Draws a trangle
 void draw_empty_triangle(triangle_t triangle, uint32_t color);
-
-#endif

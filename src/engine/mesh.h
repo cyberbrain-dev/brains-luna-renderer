@@ -1,5 +1,4 @@
-#ifndef MESH_H
-#define MESH_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,5 +41,3 @@ void mesh_load_cube(void);
 /// @param filepath a path to the file
 /// @attention `mesh_init` FUNCTION MUST BE CALLED BEFORE
 void mesh_load_obj(const char* filepath);
-
-#endif

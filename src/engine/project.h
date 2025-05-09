@@ -1,5 +1,4 @@
-#ifndef PROJECT_H
-#define PROJECT_H
+#pragma once
 
 #include "vector.h"
 
@@ -14,5 +13,3 @@ vector2_t project_perspective(vector3_t point);
 /// @param point 3D point
 /// @returns A projected 2D-point 
 vector2_t project_orthographic(vector3_t point);
-
-#endif

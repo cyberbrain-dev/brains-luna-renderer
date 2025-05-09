@@ -1,5 +1,4 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#pragma once
 
 #include "vector.h"
 
@@ -17,5 +16,3 @@ typedef struct
 {
     vector2_t points[3];
 } triangle_t;
-
-#endif
