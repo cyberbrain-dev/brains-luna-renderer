@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(luna-renderer VERSION 0.3.0 LANGUAGES C)
+project(luna-renderer VERSION 0.4.0 LANGUAGES C)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 
