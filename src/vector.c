@@ -1,6 +1,5 @@
 #include "vector.h"
 
-// Vector2 operations
 float vector2_length(vector2_t v)
 {
     return sqrt(v.x * v.x + v.y + v.y);
@@ -35,11 +34,17 @@ float vector2_dotpr(vector2_t v1, vector2_t v2)
     return (v1.x * v2.x) + (v1.y * v2.y); 
 }
 
+void vector2_normalize(vector2_t* v)
+{
+    float length = vector2_length(*v);
 
-// Vector3 operations
+    v->x /= length;
+    v->y /= length;
+}
+
 float vector3_length(vector3_t v)
 {
-    return sqrt(v.x * v.x + v.y + v.y + v.z * v.z);
+    return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 vector3_t vector3_add(vector3_t v1, vector3_t v2)
@@ -119,4 +124,13 @@ vector3_t vector3_rotate_z(vector3_t v, float angle)
     };
 
     return rotated_vector;
+}
+
+void vector3_normalize(vector3_t* v)
+{
+    float length = vector3_length(*v);
+
+    v->x /= length;
+    v->y /= length;
+    v->z /= length;
 }

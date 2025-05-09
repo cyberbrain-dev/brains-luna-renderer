@@ -28,6 +28,9 @@ vector2_t vector2_divscl(vector2_t v, float a);
 
 /// @brief returns the scalar product of two 2D-vectors
 float vector2_dotpr(vector2_t v1, vector2_t v2);
+/// @brief Normalizes the 2D-vector
+/// @param v a vector to be normalized
+void vector2_normalize(vector2_t* v);
 
 
 /// @brief Represents a vector in a three-dimensional space
@@ -80,6 +83,10 @@ vector3_t vector3_rotate_y(vector3_t v, float angle);
 /// @param angle the angle of rotation in radians
 /// @return The result of rotating `v` vector
 vector3_t vector3_rotate_z(vector3_t v, float angle);
+
+/// @brief Normalizes the 3D-vector
+/// @param v a vector to be normalized
+void vector3_normalize(vector3_t* v);
 
 #pragma endregion
 

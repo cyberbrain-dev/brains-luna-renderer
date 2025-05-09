@@ -136,6 +136,7 @@ void update(void)
 
         // computing the face normal
         vector3_t normal = vector3_crosspr(ab, ac);
+        vector3_normalize(&normal);
 
         // finding the vector between a point in the triangle and the camera origin
         vector3_t camera_ray = vector3_sub(camera_position, a);
