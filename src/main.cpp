@@ -167,11 +167,11 @@ void update(void)
 /// @brief Renders the frame 
 void render(void)
 {
-    draw_dotted_grid(10, 10, LUNA_COLOR_GREY);
+    draw_dotted_grid(10, 10, luna::colorGrey);
 
     for (int i = 0; i < triangles_to_render.size(); i++)
     {
-        draw_empty_triangle(triangles_to_render[i], LUNA_COLOR_YELLOW);
+        draw_empty_triangle(triangles_to_render[i], luna::colorCyan);
     }
 
     // clearing the vector of triangles to render as we've already rendered everything
@@ -182,7 +182,7 @@ void render(void)
     translate_color_buffer();
 
     // clearing the color buffer after putting it to the rendering target
-    fill_color_buffer(LUNA_COLOR_BLACK);
+    fill_color_buffer(luna::colorBlack);
 
     // updating the screen
     SDL_RenderPresent(renderer);

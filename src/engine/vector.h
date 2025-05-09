@@ -85,7 +85,7 @@ namespace luna
         static Vector3 cross(const Vector3& v1, const Vector3& v2) noexcept;
 
         /// @brief Returns a new vector, 
-        /// which is the result of rotation of the vecotr 
+        /// which is the result of rotation of the vector
         /// @param rotation A vector with angles in radians
         Vector3 rotate(const Vector3& rotation) const noexcept;
 

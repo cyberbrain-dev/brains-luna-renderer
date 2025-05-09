@@ -1,7 +1,6 @@
 #include "draw.h"
 
-
-void fill_color_buffer(uint32_t color)
+void fill_color_buffer(luna::Color color)
 {
     // looping through all the pixels...
     for (int y = 0; y < window_height; y++)
@@ -9,23 +8,23 @@ void fill_color_buffer(uint32_t color)
         for (int x = 0; x < window_width; x++)
         {
             // ...and setting the color
-            color_buffer[y * window_width + x] = color;
+            color_buffer[y * window_width + x] = color.toUint32();
         }
     }
 }
 
-void draw_pixel(int x, int y, uint32_t color)
+void draw_pixel(int x, int y, luna::Color color)
 {
     if (x >= 0 && 
         x < window_width && 
         y >= 0 && 
         y < window_height)
     {
-        color_buffer[y * window_width + x] = color;
+        color_buffer[y * window_width + x] = color.toUint32();
     }
 }
 
-void draw_solid_grid(int cell_width, int cell_height, uint32_t color)
+void draw_solid_grid(int cell_width, int cell_height, luna::Color color)
 {
     for (int y = 0; y < window_height; y++)
     {
@@ -33,30 +32,30 @@ void draw_solid_grid(int cell_width, int cell_height, uint32_t color)
         {
             if (y % cell_height == 0)
             {
-                color_buffer[y * window_width + x] = color;
+                color_buffer[y * window_width + x] = color.toUint32();
                 continue;
             }
 
             if (x % cell_width == 0)
             {
-                color_buffer[y * window_width + x] = color;
+                color_buffer[y * window_width + x] = color.toUint32();
             }
         }
     }
 }
 
-void draw_dotted_grid(int cell_width, int cell_height, uint32_t color)
+void draw_dotted_grid(int cell_width, int cell_height, luna::Color color)
 {
     for (int y = 0; y < window_height; y += cell_height)
     {
         for (int x = 0; x < window_width; x += cell_width)
         {
-            color_buffer[y * window_width + x] = color;
+            color_buffer[y * window_width + x] = color.toUint32();
         }
     }
 }
 
-void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color)
+void draw_rect(int x_pos, int y_pos, int width, int height, luna::Color color)
 {
     for (int y = y_pos; y < y_pos + height; y++)
     {
@@ -67,7 +66,7 @@ void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color)
     }
 }
 
-void draw_line_dda(int x0, int y0, int x1, int y1, uint32_t color)
+void draw_line_dda(int x0, int y0, int x1, int y1, luna::Color color)
 {
     int delta_x = x1 - x0;
     int delta_y = y1 - y0;
@@ -89,7 +88,7 @@ void draw_line_dda(int x0, int y0, int x1, int y1, uint32_t color)
     }
 }
 
-void draw_line_bresenham(int x0, int y0, int x1, int y1, uint32_t color)
+void draw_line_bresenham(int x0, int y0, int x1, int y1, luna::Color color)
 {
     int dx = abs(x1 - x0);
     int dy = abs(y1 - y0);
@@ -120,7 +119,7 @@ void draw_line_bresenham(int x0, int y0, int x1, int y1, uint32_t color)
     }
 }
 
-void draw_empty_triangle(triangle_t triangle, uint32_t color)
+void draw_empty_triangle(triangle_t triangle, luna::Color color)
 {
     luna::Vector2 p1 = triangle.points[0];
     luna::Vector2 p2 = triangle.points[1];
