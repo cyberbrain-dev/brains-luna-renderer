@@ -122,9 +122,9 @@ void draw_line_bresenham(int x0, int y0, int x1, int y1, uint32_t color)
 
 void draw_empty_triangle(triangle_t triangle, uint32_t color)
 {
-    vector2_t p1 = triangle.points[0];
-    vector2_t p2 = triangle.points[1];
-    vector2_t p3 = triangle.points[2];
+    luna::Vector2 p1 = triangle.points[0];
+    luna::Vector2 p2 = triangle.points[1];
+    luna::Vector2 p3 = triangle.points[2];
 
     // drawing lines between each of the vertices 
     draw_line_bresenham(p1.x, p1.y, p2.x, p2.y, color);

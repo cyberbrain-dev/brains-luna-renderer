@@ -15,17 +15,17 @@
 typedef struct
 {
     /// @brief dynamic vector of 3D-vectors
-    std::vector<vector3_t> vertices;
+    std::vector<luna::Vector3> vertices;
 
     /// @brief dynamic vector of faces
     std::vector<face_t> faces;
 
     /// @brief mesh's rotation
-    vector3_t rotation;
+    luna::Vector3 rotation;
 } mesh_t;
 
 /// @brief An array of vertices of the test cube
-extern vector3_t cube_vertices[N_CUBE_VERTICES];
+extern luna::Vector3 cube_vertices[N_CUBE_VERTICES];
 
 /// @brief Array of faces of the test cube
 extern face_t cube_faces[N_CUBE_FACES];

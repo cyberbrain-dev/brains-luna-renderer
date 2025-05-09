@@ -22,7 +22,7 @@ const char* path_to_model = NULL;
 std::vector<triangle_t> triangles_to_render;
 
 // position of the camera
-vector3_t camera_position = { 0, 0, 0 };
+luna::Vector3 camera_position = { 0, 0, 0 };
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
@@ -99,22 +99,22 @@ void update(void)
         face_t current_face = mesh.faces[i];
 
         // getting vertices of current face
-        vector3_t current_face_vertices[3] = {
+        luna::Vector3 current_face_vertices[3] = {
             mesh.vertices[current_face.a - 1],
             mesh.vertices[current_face.b - 1],
             mesh.vertices[current_face.c - 1],
         };
 
         // a little array that'll help us to save the transformed vertices
-        vector3_t transformed_vertices[3];
+        luna::Vector3 transformed_vertices[3];
 
         // looping through all three vertices of this current face to apply transformations
         for (int j = 0; j < 3; j++)
         {
-            vector3_t transformed_vertex = current_face_vertices[j];
+            luna::Vector3 transformed_vertex = current_face_vertices[j];
 
             // applying the rotation
-            transformed_vertex = vector3_rotate(transformed_vertex, mesh.rotation);
+            transformed_vertex = transformed_vertex.rotate(mesh.rotation);
 
             // moving all the vertices a bit "inside" the monitor
             transformed_vertex.z += 5;
@@ -123,23 +123,23 @@ void update(void)
             transformed_vertices[j] = transformed_vertex;
         }
 
-        vector3_t a = transformed_vertices[0];    /*   a   */
-        vector3_t b = transformed_vertices[1];    /*  / \  */ 
-        vector3_t c = transformed_vertices[2];    /* c---b */
+        luna::Vector3 a = transformed_vertices[0];    /*   a   */
+        luna::Vector3 b = transformed_vertices[1];    /*  / \  */ 
+        luna::Vector3 c = transformed_vertices[2];    /* c---b */
 
         // getting two vectors of the face to find the cross product (face normal)
-        vector3_t ab = vector3_sub(b, a);
-        vector3_t ac = vector3_sub(c, a);
+        luna::Vector3 ab = b - a;
+        luna::Vector3 ac = c - a;
 
         // computing the face normal
-        vector3_t normal = vector3_crosspr(ab, ac);
-        vector3_normalize(&normal);
+        luna::Vector3 normal = luna::Vector3::cross(ab, ac);
+        normal.normalize();
 
         // finding the vector between a point in the triangle and the camera origin
-        vector3_t camera_ray = vector3_sub(camera_position, a);
+        luna::Vector3 camera_ray = camera_position - a;
 
         // bypass the triangle if it is looking away from the camera
-        if (vector3_dotpr(normal, camera_ray) < 0) 
+        if (luna::Vector3::dot(normal, camera_ray) < 0) 
             continue;
 
         // a 2d triangle with projected vertices
@@ -149,7 +149,7 @@ void update(void)
         for (int j = 0; j < 3; j++)
         {
             // projecting the transformed point
-            vector2_t projected_vertex = project_perspective(transformed_vertices[j]);
+            luna::Vector2 projected_vertex = project_perspective(transformed_vertices[j]);
 
             // scale and translating projected points to the middle of the screen
             projected_vertex.x += window_width / 2;

@@ -4,7 +4,7 @@ mesh_t mesh = {
     .rotation = { 0, 0, 0 }
 };
 
-vector3_t cube_vertices[N_CUBE_VERTICES] = {
+luna::Vector3 cube_vertices[N_CUBE_VERTICES] = {
     { -1, -1, -1 }, // 1
     { -1,  1, -1 }, // 2
     {  1,  1, -1 }, // 3
@@ -46,7 +46,7 @@ void mesh_load_cube(void)
     // looping through all the cube vertices
     for (int i = 0; i < N_CUBE_VERTICES; i++)
     {
-        vector3_t vertex = cube_vertices[i];
+        luna::Vector3 vertex = cube_vertices[i];
         mesh.vertices.push_back(vertex);
     }
 
@@ -82,7 +82,7 @@ void mesh_load_obj(const char* filepath)
         if (strncmp(current_str, "v ", 2) == 0)
         {
             // creating a vertex
-            vector3_t vertex;
+            luna::Vector3 vertex;
 
             // reading the vertex data
             sscanf(

@@ -14,5 +14,5 @@ typedef struct
 /// @brief Represents a 2D triangle
 typedef struct
 {
-    vector2_t points[3];
+    luna::Vector2 points[3];
 } triangle_t;

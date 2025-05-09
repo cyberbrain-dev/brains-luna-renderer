@@ -1,90 +1,97 @@
 #pragma once
 
-#include <math.h>
-
-/// @brief Represents a vector in a two-dimensional space
-typedef struct
+namespace luna
 {
-    float x;
-    float y;
-} vector2_t;
-
-/// @brief Returns a length of 2D-vector
-float vector2_length(vector2_t v);
-
-/// @brief Sums two 2D-vectors
-vector2_t vector2_add(vector2_t v1, vector2_t v2);
-/// @brief Subtracts two 2D-vectors
-vector2_t vector2_sub(vector2_t v1, vector2_t v2);
-/// @brief Multiplies a 2D-vector by a scalar
-/// @param v 2D-vector
-/// @param a scalar
-vector2_t vector2_mulscl(vector2_t v, float a);
-/// @brief Divides a 2D-vector by a scalar
-/// @param v 2D-vector
-/// @param a scalar
-vector2_t vector2_divscl(vector2_t v, float a);
-
-/// @brief returns the scalar product of two 2D-vectors
-float vector2_dotpr(vector2_t v1, vector2_t v2);
-/// @brief Normalizes the 2D-vector
-/// @param v a vector to be normalized
-void vector2_normalize(vector2_t* v);
+    /// @brief Represents a vector in a two-dimensional space
+    struct Vector2
+    {
+        float x{};
+        float y{};
 
 
-/// @brief Represents a vector in a three-dimensional space
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-} vector3_t;
+        /// @brief Creates a zero 2D-vector
+        Vector2() noexcept = default;
+        /// @brief Creates a 2D-vector
+        Vector2(float x, float y) noexcept : x{x}, y{y} {}
+    
 
-/// @brief Returns a length of 3D-vector
-float vector3_length(vector3_t v);
+        Vector2 operator +(const Vector2& other) const noexcept
+        {
+            return Vector2(x + other.x, y + other.y);
+        }
+        Vector2 operator -(const Vector2& other) const noexcept
+        {
+            return Vector2(x - other.x, y - other.y);
+        }
+        Vector2 operator *(float scalar) const noexcept
+        {
+            return Vector2(x * scalar, y * scalar);
+        }
+        Vector2 operator /(float scalar) const noexcept
+        {
+            return Vector2(x / scalar, y / scalar);
+        }
 
-/// @brief Sums two 3D-vectors
-vector3_t vector3_add(vector3_t v1, vector3_t v2);
-/// @brief Subtracts two 3D-vectors
-vector3_t vector3_sub(vector3_t v1, vector3_t v2);
-/// @brief Multiplies a 3D-vector by a scalar
-/// @param v 3D-vector
-/// @param a scalar
-vector3_t vector3_mulscl(vector3_t v, float a);
-/// @brief Dicides a 3D-vector by a scalar
-/// @param v 3D-vector
-/// @param a scalar
-vector3_t vector3_divscl(vector3_t v, float a);
+        /// @brief Returns a length of 2D-vector
+        float magnitude() const noexcept;
 
-/// @brief returns the scalar product of two 3D-vectors
-float vector3_dotpr(vector3_t v1, vector3_t v2);
+        /// @brief Normalizes the vector
+        void normalize() noexcept;
 
-/// @brief returns the cross product of two 3D-vectors
-vector3_t vector3_crosspr(vector3_t a, vector3_t b);
+        /// @brief Returns the dot product of two 2D-vectors
+        static float dot(const Vector2& v1, const Vector2& v2) noexcept;
+    };
 
-/// @brief Rotating the vector by three axis
-/// @param v a vector to be rotated
-/// @param rotation the vector of angles in radians
-/// @return The result of rotating `v` vector
-vector3_t vector3_rotate(vector3_t v, vector3_t rotation);
-/// @brief Rotating the vector by X
-/// @param v a vector to be rotated
-/// @param angle the angle of rotation in radians
-/// @return The result of rotating `v` vector
-vector3_t vector3_rotate_x(vector3_t v, float angle);
-/// @brief Rotating the vector by Y
-/// @param v a vector to be rotated
-/// @param angle the angle of rotation in radians
-/// @return The result of rotating `v` vector
-vector3_t vector3_rotate_y(vector3_t v, float angle);
-/// @brief Rotating the vector by Z
-/// @param v a vector to be rotated
-/// @param angle the angle of rotation in radians
-/// @return The result of rotating `v` vector
-vector3_t vector3_rotate_z(vector3_t v, float angle);
+    /// @brief Represents a vector in a three-dimensional space
+    struct Vector3
+    {
+        float x{};
+        float y{};
+        float z{};
 
-/// @brief Normalizes the 3D-vector
-/// @param v a vector to be normalized
-void vector3_normalize(vector3_t* v);
 
-#pragma endregion
+        /// @brief Creates a zero 3D-vector
+        Vector3() noexcept = default;
+        /// @brief Creates a 3D-vector
+        Vector3(float x, float y, float z) noexcept : x{x}, y{y}, z{z} {}
+    
+
+        Vector3 operator +(const Vector3& other) const noexcept
+        {
+            return Vector3(x + other.x, y + other.y, z + other.z);
+        }
+        Vector3 operator -(const Vector3& other) const noexcept
+        {
+            return Vector3(x - other.x, y - other.y, z - other.z);
+        }
+        Vector3 operator *(float scalar) const noexcept
+        {
+            return Vector3(x * scalar, y * scalar, z * scalar);
+        }
+        Vector3 operator /(float scalar) const noexcept
+        {
+            return Vector3(x / scalar, y / scalar, z / scalar);
+        }
+
+        /// @brief Returns a length of 3D-vector
+        float magnitude() const noexcept;
+
+        /// @brief Normalizes the vector
+        void normalize() noexcept;
+
+        /// @brief Returns the dot product of two 3D-vectors
+        static float dot(const Vector3& v1, const Vector3& v2) noexcept;
+        /// @brief Returns a cross product of two 3D-vectors
+        static Vector3 cross(const Vector3& v1, const Vector3& v2) noexcept;
+
+        /// @brief Returns a new vector, 
+        /// which is the result of rotation of the vecotr 
+        /// @param rotation A vector with angles in radians
+        Vector3 rotate(const Vector3& rotation) const noexcept;
+
+    private:
+        Vector3 rotate_x(float angle) const noexcept;
+        Vector3 rotate_y(float angle) const noexcept;
+        Vector3 rotate_z(float angle) const noexcept;
+    };
+}
