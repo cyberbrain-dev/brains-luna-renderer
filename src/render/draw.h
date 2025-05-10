@@ -37,4 +37,4 @@ void draw_line_dda(int x0, int y0, int x1, int y1, luna::Color color);
 /// @brief Draws a line using Bresenham's algorithm
 void draw_line_bresenham(int x0, int y0, int x1, int y1, luna::Color color);
 /// @brief Draws a trangle
-void draw_empty_triangle(triangle_t triangle, luna::Color color);
+void draw_empty_triangle(luna::Triangle triangle, luna::Color color);

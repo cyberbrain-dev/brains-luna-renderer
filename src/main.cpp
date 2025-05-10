@@ -1,5 +1,7 @@
 #include <string.h>
+#include <string>
 #include <vector>
+#include <array>
 
 #include "render/display.h"
 #include "render/draw.h"
@@ -16,19 +18,20 @@
 
 /// @brief Contains a path to the model that must be displayed 
 ///        during the work of application
-const char* path_to_model = NULL;
+std::string pathToModel;
 
 /// @brief vector of the triangles to be rendered
-std::vector<triangle_t> triangles_to_render;
+std::vector<luna::Triangle> triangles_to_render;
 
 // position of the camera
-luna::Vector3 camera_position = { 0, 0, 0 };
+luna::Vector3 camera_position{ 0, 0, 0 };
 
 /// @brief Indicates whether the gameloop is running or not
 bool is_running = false;
 
 int previous_frame_time = 0;
 
+luna::Mesh mesh;
 
 /// @brief Sets up a program before the render loop
 void setup(void)
@@ -45,13 +48,7 @@ void setup(void)
         window_height
     );
 
-#ifdef LUNA_DEBUG
-    // setting up the mesh
-    mesh_load_obj("../assets/cube.obj");
-#else
-    // setting up the mesh
-    mesh_load_obj(path_to_model);
-#endif
+    mesh = luna::Mesh::load(pathToModel);
 }
 
 /// @brief Checking any input the user does 
@@ -96,7 +93,7 @@ void update(void)
     for (int i = 0; i < mesh.faces.size(); i++)
     {
         // getting current face
-        face_t current_face = mesh.faces[i];
+        luna::Face current_face = mesh.faces[i];
 
         // getting vertices of current face
         luna::Vector3 current_face_vertices[3] = {
@@ -142,8 +139,9 @@ void update(void)
         if (luna::Vector3::dot(normal, camera_ray) < 0) 
             continue;
 
-        // a 2d triangle with projected vertices
-        triangle_t projected_triangle;
+
+        // an array which staores all the projected points of current triangle
+        std::array<luna::Vector2, 3> projectedVertices{};
 
         // looping through all three vertices to perform projection
         for (int j = 0; j < 3; j++)
@@ -156,11 +154,17 @@ void update(void)
             projected_vertex.y += window_height / 2;
 
             // setting the projected vertex to triangle's point
-            projected_triangle.points[j] = projected_vertex;
+            projectedVertices[j] = projected_vertex;
         }
 
+        luna::Triangle projectedTriangle(
+            projectedVertices[0], 
+            projectedVertices[1], 
+            projectedVertices[2]
+        );
+
         // saving the projected triangle to be rendered
-        triangles_to_render.push_back(projected_triangle);
+        triangles_to_render.push_back(projectedTriangle);
     }
 }
 
@@ -207,7 +211,7 @@ int main(int argc, const char** argv)
     }
     else if (argc == 3 && strcmp(argv[1], "-m") == 0)
     {
-        path_to_model = argv[2];
+        pathToModel = argv[2];
     }
     else
     {

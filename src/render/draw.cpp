@@ -119,11 +119,11 @@ void draw_line_bresenham(int x0, int y0, int x1, int y1, luna::Color color)
     }
 }
 
-void draw_empty_triangle(triangle_t triangle, luna::Color color)
+void draw_empty_triangle(luna::Triangle triangle, luna::Color color)
 {
-    luna::Vector2 p1 = triangle.points[0];
-    luna::Vector2 p2 = triangle.points[1];
-    luna::Vector2 p3 = triangle.points[2];
+    luna::Vector2 p1 = triangle[0];
+    luna::Vector2 p2 = triangle[1];
+    luna::Vector2 p3 = triangle[2];
 
     // drawing lines between each of the vertices 
     draw_line_bresenham(p1.x, p1.y, p2.x, p2.y, color);

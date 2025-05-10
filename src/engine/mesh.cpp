@@ -1,114 +1,123 @@
 #include "mesh.h"
 
-mesh_t mesh = {
-    .rotation = { 0, 0, 0 }
-};
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
-luna::Vector3 cube_vertices[N_CUBE_VERTICES] = {
-    { -1, -1, -1 }, // 1
-    { -1,  1, -1 }, // 2
-    {  1,  1, -1 }, // 3
-    {  1, -1, -1 }, // 4
-    {  1,  1,  1 }, // 5
-    {  1, -1,  1 }, // 6
-    { -1,  1,  1 }, // 7
-    { -1, -1,  1 }  // 8
-};
-
-face_t cube_faces[N_CUBE_FACES] = {
-    // front
-    { 1, 2, 3 },
-    { 1, 3, 4 },
-
-    // right
-    { 4, 3, 5 },
-    { 4, 5, 6 },
-
-    // back
-    { 6, 5, 7 },
-    { 6, 7, 8 },
-
-    // left
-    { 8, 7, 2 },
-    { 8, 2, 1 },
-
-    // top
-    { 2, 7, 5 },
-    { 2, 5, 3 },
-
-    // bottom
-    { 6, 8, 1 },
-    { 6, 1, 4 }
-};
-
-void mesh_load_cube(void) 
+namespace luna
 {
-    // looping through all the cube vertices
-    for (int i = 0; i < N_CUBE_VERTICES; i++)
+    std::array<Vector3, cubeVerticesCount> Mesh::cubeVertices{
+        luna::Vector3{ -1, -1, -1 }, // 1
+        luna::Vector3{ -1,  1, -1 }, // 2
+        luna::Vector3{  1,  1, -1 }, // 3
+        luna::Vector3{  1, -1, -1 }, // 4
+        luna::Vector3{  1,  1,  1 }, // 5
+        luna::Vector3{  1, -1,  1 }, // 6
+        luna::Vector3{ -1,  1,  1 }, // 7
+        luna::Vector3{ -1, -1,  1 }  // 8
+    };
+
+    std::array<Face, cubeFacesCount> Mesh::cubeFaces{
+        // front
+        luna::Face{ 1, 2, 3 },
+        luna::Face{ 1, 3, 4 },
+
+        // right
+        luna::Face{ 4, 3, 5 },
+        luna::Face{ 4, 5, 6 },
+        
+        // back
+        luna::Face{ 6, 5, 7 },
+        luna::Face{ 6, 7, 8 },
+        
+        // left
+        luna::Face{ 8, 7, 2 },
+        luna::Face{ 8, 2, 1 },
+        
+        // top
+        luna::Face{ 2, 7, 5 },
+        luna::Face{ 2, 5, 3 },
+        
+        // bottom
+        luna::Face{ 6, 8, 1 },
+        luna::Face{ 6, 1, 4 }
+    };
+
+    Mesh Mesh::cube()
     {
-        luna::Vector3 vertex = cube_vertices[i];
-        mesh.vertices.push_back(vertex);
-    }
+        Mesh newMesh{};
 
-    // looping through all the cube faces
-    for (int i = 0; i < N_CUBE_FACES; i++)
-    {
-        face_t face = cube_faces[i];
-        mesh.faces.push_back(face);
-    }
-}
-
-void mesh_load_obj(const char* filepath)
-{
-    // getting the obj file 
-    FILE* obj_file = fopen(filepath, "r");
-    // if something went wrong...
-    if (obj_file == NULL)
-    {
-        // ...we would print an error...
-        fprintf(stderr, "Luna: Cannot read the model file. Check the path and ensure that the file exists.\n");
-
-        // ..and quit the program
-        exit(-1);
-    }
-
-    // a string that contains info whether about a vertex or a face
-    char current_str[256];
-
-    // reading all the strings in the obj file
-    while (fgets(current_str, sizeof(current_str), obj_file) != NULL)
-    {
-        // if this is a vertex...
-        if (strncmp(current_str, "v ", 2) == 0)
+        // looping through all the cube vertices
+        for (size_t i = 0; i < cubeVerticesCount; i++)
         {
-            // creating a vertex
-            luna::Vector3 vertex;
-
-            // reading the vertex data
-            sscanf(
-                current_str, 
-                "v %f %f %f", 
-                &vertex.x, 
-                &vertex.y, 
-                &vertex.z
-            );
-
-            mesh.vertices.push_back(vertex);
+            Vector3 vertex = cubeVertices[1];
+            newMesh.vertices.push_back(vertex);
         }
-        else if (strncmp(current_str, "f ", 2) == 0)
+
+        // looping through all the cube faces
+        for (size_t i = 0; i < cubeFacesCount; i++)
         {
-            // creating a face
-            face_t face;
-
-            sscanf(
-                current_str,
-                "f %d/%*d/%*d %d/%*d/%*d %d/%*d/%*d",
-                &face.a,
-                &face.b,
-                &face.c
-            );
-
-            mesh.faces.push_back(face);
+            Face face = cubeFaces[i];
+            newMesh.faces.push_back(face);
         }
+
+        return newMesh;
+    }
+
+    Mesh Mesh::load(std::string filepath)
+    {
+        Mesh newMesh{};
+
+        // poening the obj file
+        std::ifstream objFile(filepath);
+
+        // if something went wrong...
+        if (!objFile.is_open())
+        {
+            // ...we would print an error...
+            std::cerr << "Luna: Cannot read the model file." 
+                      << "Check the path and ensure that the file exists."
+                      << std::endl;
+
+            // ..and quit the program
+            exit(-1);
+        }
+
+        // a string that contains info whether about a vertex or a face
+        std::string currentLine;
+
+        // reading all the strings in the obj file
+        while (std::getline(objFile, currentLine))
+        {
+            // if this is a vertex...
+            if (currentLine.rfind("v ", 0) == 0)
+            {
+                // creating a vertex
+                Vector3 vertex;
+
+                // reading the data
+                std::stringstream ss(currentLine.substr(2));
+                ss >> vertex.x >> vertex.y >> vertex.z;
+
+                newMesh.vertices.push_back(vertex);
+            }
+            else if (currentLine.rfind("f ", 0) == 0)
+            {
+                // creating a face
+                Face face{0, 0, 0};
+
+                sscanf(
+                    currentLine.c_str(),
+                    "f %d/%*d/%*d %d/%*d/%*d %d/%*d/%*d",
+                    &face.a,
+                    &face.b,
+                    &face.c
+                );
+
+                newMesh.faces.push_back(face);
+            }
+        }
+
+        return newMesh;
     }
 }
