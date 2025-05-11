@@ -15,7 +15,8 @@ namespace luna
         int b{};
         int c{};
 
-        // TODO: make default constructor
+        /// @brief Creates a face
+        Face() = default;
 
         /// @brief Creates a face. The parameters 
         /// that you have to pass in this constructor are indices of vertices
