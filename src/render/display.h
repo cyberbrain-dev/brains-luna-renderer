@@ -41,6 +41,6 @@ namespace luna
 
     private:
         /// @brief Updates the SDL texture with our color buffer and copies the texture to the rendering target
-        void translateColorBuffer() const;
+        void _translateColorBuffer() const;
     };
 }

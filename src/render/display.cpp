@@ -66,12 +66,12 @@ namespace luna
 
     void Window::render() const
     {
-        translateColorBuffer();
+        _translateColorBuffer();
 
         SDL_RenderPresent(_renderer);
     }
 
-    void Window::translateColorBuffer() const
+    void Window::_translateColorBuffer() const
     {
         // moving color buffer data to the SDL texture
         SDL_UpdateTexture(

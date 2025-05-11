@@ -16,10 +16,12 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
 )
 
+file(GLOB_RECURSE APP_SRC "src/app/*.cpp")
 file(GLOB_RECURSE ENGINE_SRC "src/engine/*.cpp")
 file(GLOB_RECURSE RENDER_SRC "src/render/*.cpp")
 file(GLOB_RECURSE CORE_SRC   "src/core/*.cpp")
 
+file(GLOB_RECURSE APP_HEADERS "src/app/*.h")
 file(GLOB_RECURSE ENGINE_HEADERS "src/engine/*.h")
 file(GLOB_RECURSE RENDER_HEADERS "src/render/*.h")
 file(GLOB_RECURSE CORE_HEADERS   "src/core/*.h")
@@ -27,14 +29,16 @@ file(GLOB_RECURSE CORE_HEADERS   "src/core/*.h")
 add_executable(
     luna-renderer
 
+    ${APP_HEADERS}
+    ${ENGINE_HEADERS}
+    ${RENDER_HEADERS}
+    ${CORE_HEADERS}
+
+    ${APP_SRC}
     ${ENGINE_SRC}
     ${RENDER_SRC}
     ${CORE_SRC}
 
-    ${ENGINE_HEADERS}
-    ${RENDER_HEADERS}
-    ${CORE_HEADERS}
-    
     src/main.cpp
 )
 
