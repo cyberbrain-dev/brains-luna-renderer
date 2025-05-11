@@ -1,86 +1,87 @@
 #include "display.h"
 
+#include <stdexcept>
 
-SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
-
-uint32_t* color_buffer = NULL;
-SDL_Texture* color_buffer_texture = NULL;
-
-int window_width = 800;
-int window_height = 600;
-
-
-bool initialize_window(void)
+namespace luna
 {
-    // initializing SDL subsystems...
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    Window::Window()
     {
-        fprintf(stderr, "Luna: An error occured initializing SDL subsystems.\n");
-        return false;
+        // TODO: Add fullscreen parameters, window size parameters, window title parameters
+
+        // initializing SDL subsystems...
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+        {
+            throw std::runtime_error("An error occurred initializing SDL subsystems.");
+        }
+
+        // using the SDL to query the resolution of my monitor...
+        SDL_DisplayMode displayMode;
+        SDL_GetCurrentDisplayMode(0, &displayMode);
+
+        // ...and setting the resolution
+        windowWidth = displayMode.w;
+        windowHeight = displayMode.h;
+
+        // initializing an SDL window
+        _window = SDL_CreateWindow(
+            "Luna Renderer",
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            windowWidth,
+            windowHeight,
+            SDL_WINDOW_BORDERLESS
+        );
+
+        // if the window has not been created...
+        if (!_window)
+        {
+            throw std::runtime_error("An error occurred initializing SDL window.");
+        }
+
+        // initializing an SDL renderer
+        _renderer = SDL_CreateRenderer(_window, -1, 0);
+
+        // if the renderer has not been created...
+        if (!_renderer)
+        {
+            throw std::runtime_error("An error occurred initializing SDL renderer.");
+        }
+
+        // setting the window fullscreen
+        SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
+
+        // allocating memory in color buffer for each pixel of the window
+        _colorBuffer.resize(windowWidth * windowHeight);
     }
 
-#ifndef LUNA_DEBUG
-    // using the SDL to query the resolution of my monitor...
-    SDL_DisplayMode display_mode;
-    SDL_GetCurrentDisplayMode(0, &display_mode);
-
-    // ...and setting the resolution 
-    window_width = display_mode.w;
-    window_height = display_mode.h;
-#endif
-
-
-    // initializing a SDL window
-    window = SDL_CreateWindow(
-        "Luna Renderer",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        window_width,
-        window_height,
-        0
-    );
-
-    if (!window)
+    Window::~Window()
     {
-        fprintf(stderr, "Luna: An error occured initializing SDL window.\n");
-        return false;
+        SDL_DestroyRenderer(_renderer);
+        SDL_DestroyWindow(_window);
+
+        SDL_DestroyTexture(_colorBufferTexture);
+
+        SDL_Quit();
     }
 
-
-    // initializin SDL renderer
-    renderer = SDL_CreateRenderer(window, -1, 0);
-
-    if (!renderer)
+    void Window::render() const
     {
-        fprintf(stderr, "Luna: An error occured initializing SDL renderer.\n");
-        return false;
+        translateColorBuffer();
+
+        SDL_RenderPresent(_renderer);
     }
 
-#ifndef LUNA_DEBUG
-    // setting the window fullscreen
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-#endif
+    void Window::translateColorBuffer() const
+    {
+        // moving color buffer data to the SDL texture
+        SDL_UpdateTexture(
+            _colorBufferTexture,
+            nullptr,
+            _colorBuffer.data(),
+            static_cast<int>(windowWidth * sizeof(uint32_t))
+        );
 
-
-    return true;
-}
-void destroy_window(void)
-{
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-
-    SDL_Quit();
-}
-
-void translate_color_buffer(void)
-{
-    SDL_UpdateTexture(
-        color_buffer_texture,
-        NULL,
-        color_buffer,
-        (int) (window_width * sizeof(uint32_t))
-    );
-
-    SDL_RenderCopy(renderer, color_buffer_texture, NULL, NULL);
+        // moving SDL texture data to render target (when the render function is called, it'll be rendered)
+        SDL_RenderCopy(_renderer, _colorBufferTexture, nullptr, nullptr);
+    }
 }

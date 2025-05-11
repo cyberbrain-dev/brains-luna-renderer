@@ -64,11 +64,11 @@ namespace luna
         {
             return {x - other.x, y - other.y, z - other.z};
         }
-        Vector3 operator *(float scalar) const noexcept
+        Vector3 operator *(const float scalar) const noexcept
         {
             return {x * scalar, y * scalar, z * scalar};
         }
-        Vector3 operator /(float scalar) const noexcept
+        Vector3 operator /(const float scalar) const noexcept
         {
             return {x / scalar, y / scalar, z / scalar};
         }

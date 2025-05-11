@@ -1,38 +1,46 @@
 #pragma once
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdint.h>
-
 #include <SDL2/SDL.h>
 
+#include <cstdint>
+#include <vector>
 
-#define FRAME_RATE 165
-#define FRAME_TARGET_TIME (1000 / FRAME_RATE)
+namespace luna
+{
+    class Window
+    {
+        friend class Drawer;
 
+    public:
+        /// @brief Frame rate of the window
+        constexpr int frameRate = 165;
+        /// @brief A time span that one frame is presented on the screen
+        constexpr float frameTagetTime = 1000.0 / frameRate;
 
-/// @brief SDL window instance
-extern SDL_Window* window;
-/// @brief SDL renderer instance
-extern SDL_Renderer* renderer;
+        int windowWidth{};
+        int windowHeight{};
 
-/// @brief An array, representing color buffer - a collection of pixel colors, that should be rendered
-extern uint32_t* color_buffer;
-/// @brief A texture that the color buffer is translated to and which is able to be rendered by SDL
-extern SDL_Texture* color_buffer_texture;
+    private:
+        SDL_Window* _window = nullptr;
+        SDL_Renderer* _renderer = nullptr;
 
-/// @brief Window width
-extern int window_width;
-/// @brief Window height
-extern int window_height;
+        /// @brief An array, representing color buffer - a collection of pixel colors, that should be rendered
+        std::vector<uint32_t> _colorBuffer;
+        /// @brief A texture that the color buffer is translated to and which is rendered by SDL
+        SDL_Texture* _colorBufferTexture = nullptr;
 
+    public:
+        /// @brief Creates a simple Luna window
+        Window();
 
-/// @brief Creates a simple Luna window
-/// @return `true` if the initialization is successful, otherwise - `false`
-bool initialize_window(void);
+        /// @brief Destroys the window and releases all used resources
+        ~Window();
 
-/// @brief Releases all the resources the window has been using
-void destroy_window(void);
+        /// @Renders the texture that is now in the rendering target
+        void render() const;
 
-/// @brief Updates the SDL texture with our color buffer and copies the texture to the rendering target
-void translate_color_buffer(void);
+    private:
+        /// @brief Updates the SDL texture with our color buffer and copies the texture to the rendering target
+        void translateColorBuffer() const;
+    };
+}

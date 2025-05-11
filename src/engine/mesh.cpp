@@ -6,7 +6,7 @@
 
 namespace luna
 {
-    std::array<Vector3, cubeVerticesCount> Mesh::cubeVertices{
+    std::array<Vector3, cubeVerticesCount> Mesh::_cubeVertices{
         luna::Vector3{ -1, -1, -1 }, // 1
         luna::Vector3{ -1,  1, -1 }, // 2
         luna::Vector3{  1,  1, -1 }, // 3
@@ -17,7 +17,7 @@ namespace luna
         luna::Vector3{ -1, -1,  1 }  // 8
     };
 
-    std::array<Face, cubeFacesCount> Mesh::cubeFaces{
+    std::array<Face, cubeFacesCount> Mesh::_cubeFaces{
         // front
         luna::Face{ 1, 2, 3 },
         luna::Face{ 1, 3, 4 },
@@ -50,14 +50,14 @@ namespace luna
         // looping through all the cube vertices
         for (size_t i = 0; i < cubeVerticesCount; i++)
         {
-            Vector3 vertex = cubeVertices[1];
+            Vector3 vertex = _cubeVertices[1];
             newMesh.vertices.push_back(vertex);
         }
 
         // looping through all the cube faces
         for (size_t i = 0; i < cubeFacesCount; i++)
         {
-            Face face = cubeFaces[i];
+            Face face = _cubeFaces[i];
             newMesh.faces.push_back(face);
         }
 

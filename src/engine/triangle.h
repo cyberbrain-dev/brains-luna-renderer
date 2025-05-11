@@ -28,16 +28,16 @@ namespace luna
     struct Triangle
     {
     private:
-        std::array<luna::Vector2, 3> points;
+        std::array<luna::Vector2, 3> _points;
 
     public:
         /// @brief Creates a 2D-triangle which vertices are the points passed
         Triangle(const Vector2& p1, const Vector2& p2, const Vector2& p3)
-            : points{p1, p2, p3} {}
+            : _points{p1, p2, p3} {}
 
         const Vector2& operator[](const size_t index) const
         {
-            return points[index];
+            return _points[index];
         }
     };
 }

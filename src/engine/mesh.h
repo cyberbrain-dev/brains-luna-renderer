@@ -36,8 +36,8 @@ namespace luna
 
     private:
         /// @brief An array of cube vertices
-        static std::array<Vector3, cubeVerticesCount> cubeVertices;
+        static std::array<Vector3, cubeVerticesCount> _cubeVertices;
         /// @brief An array of cube faces
-        static std::array<Face, cubeFacesCount> cubeFaces;
+        static std::array<Face, cubeFacesCount> _cubeFaces;
     };
 }
