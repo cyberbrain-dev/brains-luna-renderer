@@ -32,7 +32,7 @@ namespace luna
 
         /// @brief Loads a mesh from the OBJ file
         /// @param filepath a path to the file
-        static Mesh load(std::string filepath);
+        static Mesh load(const std::string &filepath);
 
     private:
         /// @brief An array of cube vertices

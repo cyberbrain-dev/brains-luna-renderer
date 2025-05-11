@@ -64,11 +64,11 @@ namespace luna
         return newMesh;
     }
 
-    Mesh Mesh::load(std::string filepath)
+    Mesh Mesh::load(const std::string& filepath)
     {
         Mesh newMesh{};
 
-        // poening the obj file
+        // opening the obj file
         std::ifstream objFile(filepath);
 
         // if something went wrong...

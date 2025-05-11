@@ -15,9 +15,11 @@ namespace luna
         int b{};
         int c{};
 
+        // TODO: make default constructor
+
         /// @brief Creates a face. The parameters 
         /// that you have to pass in this constructor are indices of vertices
-        Face(int a, int b, int c)
+        Face(const int a, const int b, const int c)
             : a{a}, b{b}, c{c} {}
     };
     
@@ -32,7 +34,7 @@ namespace luna
         Triangle(const Vector2& p1, const Vector2& p2, const Vector2& p3)
             : points{p1, p2, p3} {}
 
-        const Vector2& operator[](size_t index)
+        const Vector2& operator[](const size_t index) const
         {
             return points[index];
         }

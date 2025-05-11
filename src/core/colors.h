@@ -16,14 +16,17 @@ namespace luna
         /// @param g amount of green
         /// @param b amount of blue
         /// @param a transparency (the lower the value is, the more transparent color is)
-        constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) noexcept
+        constexpr Color(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) noexcept
             : r{r}, g{g}, b{b}, a{a} {}
 
         /// @brief Converts `luna::Color` into a `luna::Color`
         /// @return A `luna::Color` that represents the RGBA-color
-        constexpr uint32_t toUint32() const noexcept
+        [[nodiscard]] constexpr uint32_t toUint32() const noexcept
         {
-            return (uint32_t(a) << 24) | (uint32_t(r) << 16) | (uint32_t(g) << 8) | uint32_t(b);
+            return (static_cast<uint32_t>(a) << 24)
+            | (static_cast<uint32_t>(r) << 16)
+            | (static_cast<uint32_t>(g) << 8)
+            | static_cast<uint32_t>(b);
         }
     };
 
