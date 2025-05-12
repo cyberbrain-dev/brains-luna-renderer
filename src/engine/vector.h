@@ -84,6 +84,13 @@ namespace luna
         /// @brief Returns a cross product of two 3D-vectors
         static Vector3 cross(const Vector3& v1, const Vector3& v2) noexcept;
 
+        /// @brief Projects a 3D point in 2D perspectively
+        /// @returns A projected 2D-point
+        [[nodiscard]] Vector2 projectPerspective(float fovFactor) const noexcept;
+        /// @brief Projects a 3D point in 2D orthographic
+        /// @returns A projected 2D-point
+        [[nodiscard]] Vector2 projectOrthographic(float fovFactor) const noexcept;
+
         /// @brief Returns a new vector, 
         /// which is the result of rotation of the vector
         /// @param rotation A vector with angles in radians

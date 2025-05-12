@@ -13,12 +13,12 @@ namespace luna
 
     public:
         /// @brief Frame rate of the window
-        constexpr int frameRate = 165;
+        constexpr static int frameRate = 165;
         /// @brief A time span that one frame is presented on the screen
-        constexpr float frameTagetTime = 1000.0 / frameRate;
+        constexpr static float frameTargetTime = 1000.0 / frameRate;
 
-        int windowWidth{};
-        int windowHeight{};
+        int width{};
+        int height{};
 
     private:
         SDL_Window* _window = nullptr;
@@ -31,16 +31,21 @@ namespace luna
 
     public:
         /// @brief Creates a simple Luna window
+        /// @throw std::runtime_error if an error occurred during window initialization
         Window();
 
         /// @brief Destroys the window and releases all used resources
-        ~Window();
+        ~Window() noexcept;
 
-        /// @Renders the texture that is now in the rendering target
-        void render() const;
+        /// @brief Renders the texture that is now in the rendering target
+        void render() const noexcept;
+
+        /// @brief Waits until it's time for rendering another frame
+        /// @return A time, when the next frame starts
+        [[nodiscard]] static int waitUntilNextFrame(int previousFrameTime) noexcept;
 
     private:
         /// @brief Updates the SDL texture with our color buffer and copies the texture to the rendering target
-        void _translateColorBuffer() const;
+        void _translateColorBuffer() const noexcept;
     };
 }

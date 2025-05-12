@@ -4,54 +4,54 @@
 
 namespace luna
 {
-    void Drawer::fill(const luna::Color color) const
+    void Drawer::fill(const luna::Color color) const noexcept
     {
         // looping through all the pixels...
-        for (int y = 0; y < _window.windowWidth; y++)
+        for (int y = 0; y < _window.height; y++)
         {
-            for (int x = 0; x < _window.windowHeight; x++)
+            for (int x = 0; x < _window.width; x++)
             {
                 // ...and setting the color
-                _window._colorBuffer[y * _window.windowWidth + x] = color.toUint32();
+                _window._colorBuffer[y * _window.width + x] = color.toUint32();
             }
         }
     }
 
-    void Drawer::drawPixel(const int x, const int y, const luna::Color color) const
+    void Drawer::drawPixel(const int x, const int y, const luna::Color color) const noexcept
     {
-        if (x >= 0 && x < _window.windowWidth && y >= 0 && y < _window.windowHeight)
+        if (x >= 0 && x < _window.width && y >= 0 && y < _window.height)
         {
-            _window._colorBuffer[y * _window.windowWidth + x] = color.toUint32();
+            _window._colorBuffer[y * _window.width + x] = color.toUint32();
         }
     }
 
-    void Drawer::drawSolidGrid(const int cell_width, const int cell_height, const luna::Color color) const
+    void Drawer::drawSolidGrid(const int cell_width, const int cell_height, const luna::Color color) const noexcept
     {
-        for (int y = 0; y < _window.windowHeight; y++)
+        for (int y = 0; y < _window.height; y++)
         {
-            for (int x = 0; x < _window.windowWidth; x++)
+            for (int x = 0; x < _window.width; x++)
             {
                 if (y % cell_height == 0)
                 {
-                    _window._colorBuffer[y * _window.windowWidth + x] = color.toUint32();
+                    _window._colorBuffer[y * _window.width + x] = color.toUint32();
                     continue;
                 }
 
                 if (x % cell_width == 0)
                 {
-                    _window._colorBuffer[y * _window.windowWidth + x] = color.toUint32();
+                    _window._colorBuffer[y * _window.width + x] = color.toUint32();
                 }
             }
         }
     }
 
-    void Drawer::drawDottedGrid(const int cell_width, const int cell_height, const luna::Color color) const
+    void Drawer::drawDottedGrid(const int cell_width, const int cell_height, const luna::Color color) const noexcept
     {
-        for (int y = 0; y < _window.windowHeight; y += cell_height)
+        for (int y = 0; y < _window.height; y += cell_height)
         {
-            for (int x = 0; x < _window.windowHeight; x += cell_width)
+            for (int x = 0; x < _window.width; x += cell_width)
             {
-                _window._colorBuffer[y * _window.windowHeight + x] = color.toUint32();
+                _window._colorBuffer[y * _window.width + x] = color.toUint32();
             }
         }
     }
@@ -61,7 +61,7 @@ namespace luna
         const int y_pos,
         const int width,
         const int height,
-        const luna::Color color) const
+        const luna::Color color) const noexcept
     {
         for (int y = y_pos; y < y_pos + height; y++)
         {
@@ -77,23 +77,23 @@ namespace luna
         const int y0,
         const int x1,
         const int y1,
-        const luna::Color color) const
+        const luna::Color color) const noexcept
     {
-        int delta_x = x1 - x0;
-        int delta_y = y1 - y0;
+        const int delta_x = x1 - x0;
+        const int delta_y = y1 - y0;
 
         // defining which of the sides is the longes
-        int longest_side_length = abs(delta_x) >= abs(delta_y) ? abs(delta_x) : abs(delta_y);
+        const int longest_side_length = abs(delta_x) >= abs(delta_y) ? abs(delta_x) : abs(delta_y);
 
-        float x_inc = delta_x / (float)longest_side_length;
-        float y_inc = delta_y / (float)longest_side_length;
+        const float x_inc = static_cast<float>(delta_x) / static_cast<float>(longest_side_length);
+        const float y_inc = static_cast<float>(delta_y) / static_cast<float>(longest_side_length);
 
-        float current_x = x0;
-        float current_y = y0;
+        auto current_x = static_cast<float>(x0);
+        auto current_y = static_cast<float>(y0);
 
         for (int i = 0; i <= longest_side_length; i++)
         {
-            drawPixel(std::round(current_x), std::round(current_y), color);
+            drawPixel(static_cast<int>(std::round(current_x)), static_cast<int>(std::round(current_y)), color);
             current_x += x_inc;
             current_y += y_inc;
         }
@@ -104,7 +104,7 @@ namespace luna
         int y0,
         const int x1,
         const int y1,
-        const luna::Color color) const
+        const luna::Color color) const noexcept
     {
         const int dx = abs(x1 - x0);
         const int dy = abs(y1 - y0);
@@ -135,7 +135,7 @@ namespace luna
         }
     }
 
-    void Drawer::drawEmptyTriangle(const luna::Triangle& triangle, const luna::Color color) const
+    void Drawer::drawEmptyTriangle(const luna::Triangle& triangle, const luna::Color color) const noexcept
     {
         const luna::Vector2 p1 = triangle[0];
         const luna::Vector2 p2 = triangle[1];

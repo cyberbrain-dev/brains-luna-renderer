@@ -31,9 +31,9 @@ namespace luna
     };
 
     constexpr Color colorBlack    {  0,   0,   0, 255}; // 0xFF000000
-    constexpr Color colorRed      {  0, 255,   0, 255}; // 0xFFFF0000
-    constexpr Color colorGreen    {  0,   0, 255, 255}; // 0xFF00FF00
-    constexpr Color colorBlue     {255,   0,   0, 255}; // 0xFF0000FF
+    constexpr Color colorRed      {255,   0,   0, 255}; // 0xFFFF0000
+    constexpr Color colorGreen    {  0, 255,   0, 255}; // 0xFF00FF00
+    constexpr Color colorBlue     {  0,   0, 255, 255}; // 0xFF0000FF
     constexpr Color colorYellow   {  0, 255, 255, 255}; // 0xFFFFFF00
     constexpr Color colorPurple   {255, 255,   0, 255}; // 0xFFFF00FF
     constexpr Color colorCyan     {255,   0, 255, 255}; // 0xFF00FFFF

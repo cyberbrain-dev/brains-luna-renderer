@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -24,14 +25,15 @@ namespace luna
 
 
         /// @brief Creates a mesh
-        Mesh() = default;
+        Mesh() noexcept = default;
 
 
         /// @brief Creates a simple cube mesh
-        static Mesh cube();
+        static Mesh cube() noexcept;
 
         /// @brief Loads a mesh from the OBJ file
         /// @param filepath a path to the file
+        /// @throw std::runtime_error if an error occurred when the function tried to open an obj-file
         static Mesh load(const std::string &filepath);
 
     private:

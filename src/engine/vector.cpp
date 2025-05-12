@@ -55,6 +55,27 @@ namespace luna
         return result;
     }
 
+    Vector2 Vector3::projectPerspective(const float fovFactor) const noexcept
+    {
+        const luna::Vector2 projectedPoint{
+            (fovFactor * x) / z,
+            (fovFactor * y) / z
+        };
+
+        return projectedPoint;
+    }
+
+    Vector2 Vector3::projectOrthographic(const float fovFactor) const noexcept
+    {
+        const luna::Vector2 projectedPoint{
+            (fovFactor * x),
+            (fovFactor * y)
+        };
+
+        return projectedPoint;
+    }
+
+
     Vector3 Vector3::rotate(const Vector3& rotation) const noexcept
     {
         Vector3 rotated_vector = rotate_x(rotation.x);

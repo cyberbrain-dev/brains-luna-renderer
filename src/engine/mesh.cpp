@@ -43,7 +43,7 @@ namespace luna
         luna::Face{ 6, 1, 4 }
     };
 
-    Mesh Mesh::cube()
+    Mesh Mesh::cube() noexcept
     {
         Mesh newMesh{};
 
@@ -66,22 +66,17 @@ namespace luna
 
     Mesh Mesh::load(const std::string& filepath)
     {
-        Mesh newMesh{};
-
         // opening the obj file
         std::ifstream objFile(filepath);
 
         // if something went wrong...
         if (!objFile.is_open())
         {
-            // ...we would print an error...
-            std::cerr << "Luna: Cannot read the model file." 
-                      << "Check the path and ensure that the file exists."
-                      << std::endl;
-
-            // ..and quit the program
-            exit(-1);
+            throw std::runtime_error("Cannot open the model file.");
         }
+
+        // this mesh will be returned
+        Mesh newMesh{};
 
         // a string that contains info whether about a vertex or a face
         std::string currentLine;
