@@ -30,6 +30,8 @@ namespace luna
     private:
         std::array<luna::Vector2, 3> _points;
 
+        bool _isSortedByY{false};
+
     public:
         /// @brief Creates a 2D-triangle with zero vectors
         Triangle() = default;
@@ -38,9 +40,20 @@ namespace luna
         Triangle(const Vector2& p1, const Vector2& p2, const Vector2& p3) noexcept
             : _points{p1, p2, p3} {}
 
+
+        /// @brief Returns the point at the index passed
         const Vector2& operator[](const size_t index) const
         {
             return _points[index];
         }
+
+        /// @brief Returns the M point. The line from (x1, y1) to (mX, mY) divides the triangle into 2 pieces:
+        /// flat-bottom and flat-top triangles
+        /// @attention This method may call points sorting method, so getPointM() method does change the object
+        Vector2 getPointM() noexcept;
+
+    private:
+        /// @brief Sorts the points in the points array by y ascending
+        void _sortPointsByYAscending() noexcept;
     };
 }
