@@ -4,7 +4,7 @@
 
 #include "engine/triangle.h"
 
-#include "render/display.h"
+#include "render/window.h"
 
 namespace luna
 {
@@ -15,6 +15,10 @@ namespace luna
     public:
         explicit Drawer(Window& window)
             : _window(window) {}
+
+        /// @brief Renders the frame after everything is drawn
+        /// @attention Also clears color buffer
+        void render() const noexcept;
 
         /// @brief Fills the window with the color passed
         /// @param color the window will be filled by this color

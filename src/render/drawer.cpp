@@ -1,9 +1,18 @@
-#include "draw.h"
+#include "drawer.h"
 
 #include <cmath>
 
 namespace luna
 {
+    void Drawer::render() const noexcept
+    {
+        // translating to the sdl texture and render it
+        _window._render();
+
+        // clear the color buffer
+        fill(luna::colorBlack);
+    }
+
     void Drawer::fill(const luna::Color color) const noexcept
     {
         // looping through all the pixels...

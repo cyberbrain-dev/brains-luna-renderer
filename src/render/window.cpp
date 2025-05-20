@@ -1,4 +1,4 @@
-#include "display.h"
+#include "window.h"
 
 #include <stdexcept>
 
@@ -73,7 +73,7 @@ namespace luna
         SDL_Quit();
     }
 
-    void Window::render() const noexcept
+    void Window::_render() const noexcept
     {
         _translateColorBuffer();
 

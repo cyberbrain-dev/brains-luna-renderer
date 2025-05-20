@@ -4,8 +4,6 @@
 
 #include <array>
 
-#include "render/draw.h"
-
 namespace application
 {
     App::App(const std::string& pathToModel)
@@ -148,12 +146,9 @@ namespace application
         }
 
         // rendering all the stuff drawn
-        _window->render();
+        _drawer.render();
 
         // deleting all the triangles as they are already drawn
         _trianglesToRender.clear();
-
-        // "clearing" the color buffer
-        _drawer.fill(luna::colorBlack);
     }
 }

@@ -37,9 +37,6 @@ namespace luna
         /// @brief Destroys the window and releases all used resources
         ~Window() noexcept;
 
-        /// @brief Renders the texture that is now in the rendering target
-        void render() const noexcept;
-
         /// @brief Waits until it's time for rendering another frame
         /// @return A time, when the next frame starts
         [[nodiscard]] static int waitUntilNextFrame(int previousFrameTime) noexcept;
@@ -47,5 +44,8 @@ namespace luna
     private:
         /// @brief Updates the SDL texture with our color buffer and copies the texture to the rendering target
         void _translateColorBuffer() const noexcept;
+
+        /// @brief Renders the texture that is now in the rendering target
+        void _render() const noexcept;
     };
 }
