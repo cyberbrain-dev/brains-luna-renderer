@@ -7,8 +7,8 @@
 #include "engine/mesh.h"
 #include "engine/triangle.h"
 
-#include "render/display.h"
-#include "render/draw.h"
+#include "render/window.h"
+#include "render/drawer.h"
 
 namespace application
 {

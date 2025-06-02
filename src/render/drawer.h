@@ -4,7 +4,7 @@
 
 #include "engine/triangle.h"
 
-#include "render/display.h"
+#include "render/window.h"
 
 namespace luna
 {

@@ -4,7 +4,7 @@
 
 #include <array>
 
-#include "render/draw.h"
+#include "render/drawer.h"
 
 namespace application
 {
@@ -34,12 +34,12 @@ namespace application
         // Determining the type of the event
         switch (currentEvent.type)
         {
-            case SDL_QUIT:
+            case SDL_EVENT_QUIT:
                 _isRunning = false;
                 break;
 
-            case SDL_KEYDOWN:
-                if (currentEvent.key.keysym.sym == SDLK_ESCAPE)
+            case SDL_EVENT_KEY_DOWN:
+                if (currentEvent.key.key == SDLK_ESCAPE)
                     _isRunning = false;
                 break;
 

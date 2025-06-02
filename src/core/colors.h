@@ -7,7 +7,7 @@ namespace luna
     /// @brief Represents a color in RGBA-format
     struct Color
     {
-        uint8_t r{}, g{}, b{}, a{};
+        std::uint8_t r{}, g{}, b{}, a{};
 
         /// @brief Creates zero RGBA-color (0, 0, 0, 0)
         constexpr Color() noexcept = default;
@@ -16,17 +16,17 @@ namespace luna
         /// @param g amount of green
         /// @param b amount of blue
         /// @param a transparency (the lower the value is, the more transparent color is)
-        constexpr Color(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) noexcept
+        constexpr Color(const std::uint8_t r, const std::uint8_t g, const std::uint8_t b, const std::uint8_t a) noexcept
             : r{r}, g{g}, b{b}, a{a} {}
 
         /// @brief Converts `luna::Color` into a `luna::Color`
         /// @return A `luna::Color` that represents the RGBA-color
-        [[nodiscard]] constexpr uint32_t toUint32() const noexcept
+        [[nodiscard]] constexpr std::uint32_t toUint32() const noexcept
         {
-            return (static_cast<uint32_t>(a) << 24)
-            | (static_cast<uint32_t>(r) << 16)
-            | (static_cast<uint32_t>(g) << 8)
-            | static_cast<uint32_t>(b);
+            return (static_cast<std::uint32_t>(a) << 24)
+            | (static_cast<std::uint32_t>(r) << 16)
+            | (static_cast<std::uint32_t>(g) << 8)
+            | static_cast<std::uint32_t>(b);
         }
     };
 

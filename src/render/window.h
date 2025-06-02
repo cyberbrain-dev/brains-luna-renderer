@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include <cstdint>
 #include <vector>
@@ -42,7 +42,7 @@ namespace luna
 
         /// @brief Waits until it's time for rendering another frame
         /// @return A time, when the next frame starts
-        [[nodiscard]] static int waitUntilNextFrame(int previousFrameTime) noexcept;
+        [[nodiscard]] static int waitUntilNextFrame(const int previousFrameTime) noexcept;
 
     private:
         /// @brief Updates the SDL texture with our color buffer and copies the texture to the rendering target
