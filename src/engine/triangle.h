@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <cstddef>
 
 #include "engine/vector.h"
 
@@ -31,16 +30,16 @@ namespace luna
         std::array<luna::Vector2, 3> _points;
 
     public:
-        /// @brief Creates a 2D-triangle with zero vectors
-        Triangle() = default;
-
         /// @brief Creates a 2D-triangle which vertices are the points passed
-        Triangle(const Vector2& p1, const Vector2& p2, const Vector2& p3) noexcept
-            : _points{p1, p2, p3} {}
+        Triangle(const Vector2& p1, const Vector2& p2, const Vector2& p3) noexcept;
 
-        const Vector2& operator[](const size_t index) const
+        const Vector2& operator[](const std::size_t index) const
         {
             return _points[index];
         }
+
+    private:
+        /// @brief Sorts the points by Y ascending
+        void _sortPointByYAscending();
     };
 }

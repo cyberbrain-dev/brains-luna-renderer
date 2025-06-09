@@ -145,6 +145,10 @@ namespace application
         for (const luna::Triangle& triangle : _trianglesToRender)
         {
             _drawer.drawEmptyTriangle(triangle, luna::colorCyan);
+            _drawer.drawFilledTriangle(triangle, luna::colorBlue);
+
+            _drawer.drawPixel(1000, 1020, luna::colorBlue);
+            _drawer.drawPixel(200, 100, luna::colorRed);
         }
 
         // rendering all the stuff drawn
