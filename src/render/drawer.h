@@ -52,8 +52,10 @@ namespace luna
 
     private:
         /// @brief Draws a top half of filled triangle
-        void _drawFlatBottomTriangle(float x0, float y0, float x1, float y1, float x2, float y2, Color color) const noexcept;
+        void _drawFlatBottomTriangle
+        (float x0, float y0, float x1, float y1, float x2, float y2, Color color) const noexcept;
         /// @brief Draws a bottom half of filled triangle
-        // void _drawFlatTopTriangle(int x0, int y0, int x1, int y1, int x2, int y2, Color color) const noexcept;
+        void _drawFlatTopTriangle
+        (float x0, float y0, float x1, float y1, float x2, float y2, Color color) const noexcept;
     };
 }

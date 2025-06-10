@@ -15,6 +15,8 @@ namespace application
     /// @brief Represents LunaRenderer application
     class App
     {
+        const luna::Color fillTriangleColor{85, 85, 85, 85};
+
         /// @brief List that stores all the triangles that must be rendered
         std::vector<luna::Triangle> _trianglesToRender;
 

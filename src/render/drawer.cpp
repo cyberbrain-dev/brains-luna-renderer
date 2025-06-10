@@ -194,6 +194,15 @@ namespace luna
             My,
             color
         );
+        _drawFlatTopTriangle(
+            triangle[1].x,
+            triangle[1].y,
+            Mx,
+            My,
+            triangle[2].x,
+            triangle[2].y,
+            color
+        );
     }
 
     // Draw a filled a triangle with a flat bottom
@@ -231,31 +240,6 @@ namespace luna
             xEnd += slope2;
         }
     }
-    // void Drawer::_drawFlatBottomTriangle(
-    //     const int x0,
-    //     const int y0,
-    //     const int x1,
-    //     const int y1,
-    //     const int x2,
-    //     const int y2,
-    //     const Color color) const noexcept
-    // {
-    //     // calculating the two slopes (two triangle legs)
-    //     const float slope1 = static_cast<float>(x1 - x0) / static_cast<float>(y1 - y0);
-    //     const float slope2 = static_cast<float>(x2 - x0) / static_cast<float>(y2 - y0);
-    //
-    //     // start and end of the first line is the top point
-    //     auto xStart = static_cast<float>(x0);
-    //     auto xEnd = static_cast<float>(x0);
-    //
-    //     // loop through all the scanlines from top to bottom
-    //     for (int y = y0; y < y2; y++)
-    //     {
-    //         drawLineBresenham(static_cast<int>(xStart), y, static_cast<int>(xEnd), y, color);
-    //         xStart += slope1;
-    //         xEnd += slope2;
-    //     }
-    // }
 
     // Draw a filled a triangle with a flat top
     //
@@ -267,4 +251,30 @@ namespace luna
     //          \ /
     //        (x2,y2)
     //
+    void Drawer::_drawFlatTopTriangle(
+        const float x0,
+        const float y0,
+        const float x1,
+        const float y1,
+        const float x2,
+        const float y2,
+        const Color color) const noexcept
+    {
+        // calculating the two slopes (two triangle legs)
+        const float slope0 = (x2 - x0) / (y2 - y0);
+        const float slope1 = (x2 - x1) / (y2 - y1);
+
+        // start and end of the first scanline
+        float xStart = x0;
+        float xEnd = x1;
+
+        // loop through all the scanlines from top to bottom
+        for (int y = static_cast<int>(y0); y < static_cast<int>(y2); y++)
+        {
+            drawLineBresenham(static_cast<int>(xStart), y, static_cast<int>(xEnd), y, color);
+
+            xStart += slope0;
+            xEnd += slope1;
+        }
+    }
 }
