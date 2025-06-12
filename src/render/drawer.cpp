@@ -170,8 +170,10 @@ namespace luna
     //
     void Drawer::drawFilledTriangle(const Triangle& triangle, const Color color) const noexcept
     {
+        // if x1 and x2 are equal, then the (x2, y2) is the M point itself...
         if (triangle[1].x == triangle[2].x)
         {
+            // ...and only flat-bottom triangle should be drawn
             _drawFlatBottomTriangle(
                 triangle[0].x,
                 triangle[0].y,
@@ -185,8 +187,10 @@ namespace luna
             return;
         }
 
+        // if x1 and x0 are equal, then the (x0, y0) is the M point itself...
         if (triangle[1].x == triangle[0].x)
         {
+            // ...and only flat-top triangle should be drawn
             _drawFlatTopTriangle(
                 triangle[1].x,
                 triangle[1].y,
