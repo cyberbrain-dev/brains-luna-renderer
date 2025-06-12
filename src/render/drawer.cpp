@@ -170,6 +170,34 @@ namespace luna
     //
     void Drawer::drawFilledTriangle(const Triangle& triangle, const Color color) const noexcept
     {
+        if (triangle[1].x == triangle[2].x)
+        {
+            _drawFlatBottomTriangle(
+                triangle[0].x,
+                triangle[0].y,
+                triangle[1].x,
+                triangle[1].y,
+                triangle[2].x,
+                triangle[2].y,
+                color
+            );
+
+            return;
+        }
+
+        if (triangle[1].x == triangle[0].x)
+        {
+            _drawFlatTopTriangle(
+                triangle[1].x,
+                triangle[1].y,
+                triangle[0].x,
+                triangle[0].y,
+                triangle[2].x,
+                triangle[2].y,
+                color
+            );
+        }
+
         // calculating the Mx and My
         // (vertices of any triangle are sorted by Y when it is initialized)
         const float My = triangle[1].y;
