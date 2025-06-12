@@ -178,13 +178,13 @@ namespace luna
         / (triangle[2].y - triangle[0].y)
         + triangle[0].x;
 
-        // drawLineBresenham(
-        //     static_cast<int>(triangle[1].x),
-        //     static_cast<int>(triangle[1].y),
-        //     static_cast<int>(Mx),
-        //     static_cast<int>(My),
-        //     color
-        // );
+        drawLineBresenham(
+            static_cast<int>(triangle[1].x),
+            static_cast<int>(triangle[1].y),
+            static_cast<int>(Mx),
+            static_cast<int>(My),
+            color
+        );
         _drawFlatBottomTriangle(
             triangle[0].x,
             triangle[0].y,
@@ -265,16 +265,16 @@ namespace luna
         const float slope1 = (x2 - x1) / (y2 - y1);
 
         // start and end of the first scanline
-        float xStart = x0;
-        float xEnd = x1;
+        float xStart = x2;
+        float xEnd = x2;
 
-        // loop through all the scanlines from top to bottom
-        for (int y = static_cast<int>(y0); y < static_cast<int>(y2); y++)
+        // loop through all the scanlines from bottom to top
+        for (int y = static_cast<int>(y2); y > static_cast<int>(y0); y--)
         {
             drawLineBresenham(static_cast<int>(xStart), y, static_cast<int>(xEnd), y, color);
 
-            xStart += slope0;
-            xEnd += slope1;
+            xStart -= slope0;
+            xEnd -= slope1;
         }
     }
 }

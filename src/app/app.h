@@ -15,7 +15,8 @@ namespace application
     /// @brief Represents LunaRenderer application
     class App
     {
-        const luna::Color fillTriangleColor{85, 85, 85, 85};
+        const luna::Color _fillTriangleColor{159, 160, 195, 255};
+        const luna::Color _wireframeTriangleColor{188, 248, 236, 255};
 
         /// @brief List that stores all the triangles that must be rendered
         std::vector<luna::Triangle> _trianglesToRender;
@@ -29,7 +30,7 @@ namespace application
         /// @brief The time that the last frame took to be rendered
         int _previousFrameTime{};
 
-        /// @brief Main window of th application
+        /// @brief Main window of the application
         std::unique_ptr<luna::Window> _window;
 
         /// @brief An object for drawing objects on the window

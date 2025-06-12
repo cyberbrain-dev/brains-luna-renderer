@@ -144,8 +144,8 @@ namespace application
         // drawing triangles
         for (const luna::Triangle& triangle : _trianglesToRender)
         {
-            _drawer.drawEmptyTriangle(triangle, luna::colorWhite);
-            _drawer.drawFilledTriangle(triangle, fillTriangleColor);
+            _drawer.drawFilledTriangle(triangle, _fillTriangleColor);
+            _drawer.drawEmptyTriangle(triangle, _wireframeTriangleColor);
         }
 
         // rendering all the stuff drawn
